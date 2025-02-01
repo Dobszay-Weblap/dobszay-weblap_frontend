@@ -1,0 +1,70 @@
+h1{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    text-align: center;
+    padding: 5px;
+  }
+  
+  footer p{
+    text-align: center;
+    background-color: bisque;
+    padding: 15px;
+    font-family:'Times New Roman', Times, serif;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  
+  article { 
+    padding:10px;
+    margin:10px;
+    display:grid; 
+    grid-gap: 10px; 
+    grid-template-columns: repeat(8,1fr);
+    grid-template-rows: repeat(2,1fr);
+    color:white;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  aside{
+    margin:10px;
+    color:white;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+
+  .kezdokep img{
+    width: 100%;
+  }
+  
+  .kezdokep{
+    padding: 5px;
+    background-color: rgb(249, 203, 142);
+    border-top-right-radius: 5px;
+    
+  }
+  
+  .elsonezet{
+    background-color: antiquewhite;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    padding:15px;
+  }
+  
+  .navok{
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    padding: 5px;    
+  }
+  
+ 
+  .keret{
+    padding: 5px;
+    background-color: rgb(249, 203, 142);
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+  
