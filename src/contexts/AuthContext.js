@@ -9,34 +9,37 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const navigate = useNavigate();
 
-  // CSRF cookie megszerzése
   const csrf = async () => {
     await myAxios.get("/sanctum/csrf-cookie");
   };
-
-  // Bejelentkezés
-
-const login = async ({ email, password }) => {
-  try {
-    // CSRF cookie beszerzése
-    await myAxios.get("/sanctum/csrf-cookie");
-
-    const { data } = await myAxios.post("/login", { email, password });
-
-    if (data.user) {
-      setUser(data.user);  // Felhasználói adatokat beállítjuk
-      setIsLoggedIn(true);
-      localStorage.setItem("access_token", data.access_token);
-    } else {
-      console.log("Nem található felhasználói adat a válaszban.");
-    }
-  } catch (error) {
-    console.error("Bejelentkezési hiba:", error);
-  }
-};
-
   
+  //bejelenkezés
+  const login = async ({ email, password }) => {
+    await csrf(); // A CSRF cookie beszerzése
+    try {
+      const { data } = await myAxios.post("/login", { email, password });
+      setUser(data.user);
+      setIsLoggedIn(true);
+      console.log("Backend válasz:", data);
+      localStorage.setItem("access_token", data.token);
+      
+    } catch (error) {
+      console.error("Bejelentkezési hiba:", error.response ? error.response.data : error.message);
+    }
+  };
 
+  const getUser = async () => {
+    try {
+      const { data } = await myAxios.get("/user");
+      setUser(data);      
+    } catch (error) {
+      console.log(
+        "Felhasználó lekérdezési hiba:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+  
   // Kijelentkezés
   const logout = async () => {
     await csrf();

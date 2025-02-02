@@ -30,7 +30,7 @@ const Layout = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>D család</h1>
+        <h1>Dobszay család</h1>
       </header>
 
       <div className="elsonezet">
