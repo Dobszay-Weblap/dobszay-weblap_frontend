@@ -57,9 +57,14 @@ const Layout = () => {
             {user?.jogosultsagi_szint === "felhasznalo" && (
               <>
                 <NavDropdown title="Káptalan" id="kaptalan-dropdown">
+                <NavDropdown.Item as={Link} to="/etel">Étel</NavDropdown.Item>
                   <NavDropdown.Item as={Link} to="/hazak">Házak</NavDropdown.Item>
-                  <NavDropdown.Item as={Link} to="/korabbiev/2022">2022</NavDropdown.Item>
-                  <NavDropdown.Item as={Link} to="/korabbiev/2021">2021</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/csolimpia">Csolimpia</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/sortablazat">Sörtáblázat</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/szabalyok">Szabályok</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/eszkozok">Eszköz hozó</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/kozkaja">Közkaja közpénz</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/asztal">Terülj terülj asztalkám</NavDropdown.Item>
                 </NavDropdown>
 
                 <Nav.Item>
