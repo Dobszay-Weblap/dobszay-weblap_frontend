@@ -12,6 +12,7 @@
 .fahazak div {
   padding: 10px;
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .fout {
@@ -107,15 +108,41 @@
 .f4 {
   background-color: rgb(89, 79, 0);
 }
-
 .modal {
   position: fixed;
- 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000; /* Biztosan a legmagasabb z-indexet kapja */
+  width: 50%;
+  max-width: 500px;
+  border-radius: 10px;
+  border: 2px solid red; /* Piros keret, hogy biztosan látható legyen */
+  opacity: 1; /* Ne legyen átlátszó */
+  visibility: visible; /* Biztosítsuk, hogy látszódjon */
 }
 
-.fahazak div {
-  cursor: pointer;  /* Megjeleníti a kéz ikont kattintható elemeknél */
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.modal button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+
+.modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
 
 .fahazak .tooltip {
   position: absolute;

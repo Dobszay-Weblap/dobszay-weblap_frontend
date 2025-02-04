@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Hazak.css";
+import SimpleModal from "./SimpleModal";
 
 const Hazak = () => {
   const [foglaltsag, setFoglaltsag] = useState({});
@@ -24,16 +25,21 @@ const Hazak = () => {
     ) : null;
   };
 
-  // Modal megnyitása és bezárása
   const openModal = (szoba) => {
+    console.log("Modal megnyitása előtt:", modalOpen);
     setAktualisSzoba(szoba);
     setModalOpen(true);
+    console.log("Modal megnyitása után:", modalOpen);
   };
-
+  
   const closeModal = () => {
+    console.log("Modal bezárása előtt:", modalOpen);
     setAktualisSzoba(null);
     setModalOpen(false);
+    console.log("Modal bezárása után:", modalOpen);
   };
+  
+  
 
   // Lakó hozzáadása
   const handleAddLako = () => {
@@ -48,15 +54,29 @@ const Hazak = () => {
           lako: ujLako,
         }),
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("POST kérés hiba");
+          }
+          return res.json();
+        })
         .then((data) => {
           setFoglaltsag(data);
           setUjLako(""); // Ürítjük a lakó nevét
           closeModal(); // Bezárjuk a modal-t
         })
-        .catch((err) => console.error("Hiba a lakó hozzáadása során:", err));
+        .catch((err) => {
+          console.error("Hiba a lakó hozzáadása során:", err);
+          alert("Hiba történt a lakó hozzáadása közben");
+        });
     }
   };
+  
+
+  useEffect(() => {
+    console.log("Modal állapota változott:", modalOpen);
+  }, [modalOpen]);
+  
 
   return (
     <div className="keret">
@@ -108,23 +128,33 @@ const Hazak = () => {
 
         {/* Emeletek blokk */}
         <article className="haz">
-          <div className={getClassName("em1", "Emelet 1")}>Emelet 1</div>
-          <div className={getClassName("em2", "Emelet 2")}>Emelet 2</div>
-          <div className={getClassName("em3", "Emelet 3")}>Emelet 3</div>
-          <div className={getClassName("em4", "Emelet 4")}>Emelet 4</div>
-          <div className={getClassName("em5", "Emelet 5")}>Emelet 5</div>
-          <div className={getClassName("em6", "Emelet 6")}>Emelet 6</div>
-          <div className={getClassName("em7", "Emelet 7")}>Emelet 7</div>
-          <div className={getClassName("em8", "Emelet 8")}>Emelet 8</div>
-          <div className={getClassName("fszt8", "Fszt 8")}>Fszt 8.</div>
-          <div className={getClassName("fszt7", "Fszt 7")}>Fszt 7.</div>
-          <div className={getClassName("fszt6", "Fszt 6")}>Fszt 6.</div>
-          <div className={getClassName("fszt5", "Fszt 5")}>Fszt 5.</div>
-          <div className={getClassName("fszt4", "Fszt 4")}>Fszt 4.</div>
-          <div className={getClassName("fszt3", "Fszt 3")}>Fszt 3.</div>
-          <div className={getClassName("fszt2", "Fszt 2")}>Fszt 2.</div>
-          <div className={getClassName("fszt1", "Fszt 1")}>Fszt 1.</div>
-        </article>
+  {[
+    "Emelet 1", "Emelet 2", "Emelet 3", "Emelet 4",
+    "Emelet 5", "Emelet 6", "Emelet 7", "Emelet 8",
+    "Fszt 8", "Fszt 7", "Fszt 6", "Fszt 5",
+    "Fszt 4", "Fszt 3", "Fszt 2", "Fszt 1"
+  ].map((szoba) => {
+    // Az osztály neve a megfelelő formátumban
+    const osztalyNev = szoba.toLowerCase()
+      .replace("emelet ", "em")
+      .replace("fszt ", "fszt");
+    
+    return (
+      <div
+        key={szoba}
+        className={getClassName(osztalyNev, szoba)}
+        onClick={() => {
+          console.log("Kattintottál erre:", szoba);
+          openModal(szoba);
+        }}
+      >
+  {szoba}
+</div>
+
+    );
+  })}
+</article>
+
 
         {/* Szigeti József utca blokk */}
         <aside>
@@ -137,23 +167,34 @@ const Hazak = () => {
     <div className="modal-content">
       <h2>{aktualisSzoba} Lakói</h2>
       <div>
-        {/* Kiíratjuk a lakókat */}
-        {foglaltsag[aktualisSzoba] &&
-          foglaltsag[aktualisSzoba].lakok?.map((lako, index) => (
+        {foglaltsag[aktualisSzoba]?.lakok?.length > 0 ? (
+          foglaltsag[aktualisSzoba].lakok.map((lako, index) => (
             <div key={index}>{lako}</div>
-          ))}
+          ))
+        ) : (
+          <p>Nincsenek lakók.</p>
+        )}
       </div>
-      <input
-        type="text"
-        placeholder="Új lakó neve"
-        value={ujLako}
-        onChange={(e) => setUjLako(e.target.value)}
-      />
-      <button onClick={handleAddLako}>Hozzáadás</button>
+      {foglaltsag[aktualisSzoba]?.tele ? (
+        <p style={{ color: "red", fontWeight: "bold" }}>Ez a szoba tele van!</p>
+      ) : (
+        <>
+          <input
+            type="text"
+            placeholder="Új lakó neve"
+            value={ujLako}
+            onChange={(e) => setUjLako(e.target.value)}
+          />
+          <button onClick={handleAddLako}>Hozzáadás</button>
+        </>
+      )}
       <button onClick={closeModal}>Bezárás</button>
     </div>
   </div>
 )}
+
+
+
 
     </div>
   );

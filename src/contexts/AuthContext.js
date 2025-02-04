@@ -49,23 +49,29 @@ export const AuthProvider = ({ children }) => {
       } 
       }
 
-const getUserData = async () => {
-  const token = localStorage.getItem('access_token');
-  if (!token) return;
-    try {
-      const response = await myAxios.get('http://localhost:8000/api/user', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setUser(response.data);
-      setIsLoggedIn(true);
-      console.log('Felhasználói adat:', response.data); // A válasz itt jön
-    } catch (error) {
-      console.error('Hiba a felhasználói adatok lekérésekor:', error);
-      logout(); 
-    }
-  }
+      const getUserData = async () => {
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
+        try {
+          const response = await myAxios.get("api/user", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setUser(response.data);
+          setIsLoggedIn(true);
+          console.log("Felhasználói adat:", response.data);
+        } catch (error) {
+          console.error("Hiba a felhasználói adatok lekérésekor:", error);
+          if (error.response && error.response.status === 401) {
+            console.log("401 hiba: Token érvénytelen, kijelentkeztetés.");
+            logout(); 
+          } else {
+            console.log("Egyéb hiba történt, de nem jelentkeztetünk ki automatikusan.");
+          }
+        }
+      };
+      
 
 useEffect(() => {
   const token = localStorage.getItem("access_token");
