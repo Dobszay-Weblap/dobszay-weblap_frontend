@@ -22,10 +22,11 @@ export const AuthProvider = ({ children }) => {
             email: email,
             password: password,
           });
-          setUser(response.data.user);  // Elmentjük a felhasználót
-          setToken(response.data.access_token);  // Elmentjük a tokent
-          localStorage.setItem('access_token', response.data.token);
-          getUserData();
+          const accessToken = response.data.access_token;
+            setUser(response.data.user);
+            setToken(accessToken);
+            setIsLoggedIn(true);
+            localStorage.setItem("access_token", accessToken);
           } catch (error) {
             console.error('Hiba a bejelentkezéskor:', error.response?.data?.message || error.message);
           }
@@ -37,34 +38,43 @@ export const AuthProvider = ({ children }) => {
       await csrf();
       try {
         await myAxios.post("/logout");
+      } catch (error) {
+        console.log(error);
+        }
+        finally {
         setUser(null);
         setIsLoggedIn(false);
         localStorage.removeItem("access_token");
         navigate("/");  // Kijelentkezés után navigálás a bejelentkezési oldalra
-      } catch (error) {
-        console.log(error);
+      } 
       }
-    };
-
 
 const getUserData = async () => {
   const token = localStorage.getItem('access_token');
-  if (token) {
+  if (!token) return;
     try {
       const response = await myAxios.get('http://localhost:8000/api/user', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+      setUser(response.data);
+      setIsLoggedIn(true);
       console.log('Felhasználói adat:', response.data); // A válasz itt jön
     } catch (error) {
       console.error('Hiba a felhasználói adatok lekérésekor:', error);
+      logout(); 
     }
   }
-};
 
 useEffect(() => {
-  getUserData(); // Ez fogja meghívni az API-t
+  const token = localStorage.getItem("access_token");
+  if (token) {
+    getUserData(); // Ha van token, próbáljuk lekérni a felhasználói adatokat
+  } else {
+    setIsLoggedIn(false); // Ha nincs token, a felhasználó nincs bejelentkezve
+    setUser(null);
+  }
 }, []); // Az üres tömb biztosítja, hogy csak egyszer fusson le
 
   
