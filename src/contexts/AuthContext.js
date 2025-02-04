@@ -75,9 +75,7 @@ useEffect(() => {
     setIsLoggedIn(false); // Ha nincs token, a felhasználó nincs bejelentkezve
     setUser(null);
   }
-}, []); // Az üres tömb biztosítja, hogy csak egyszer fusson le
-
-  
+}, []);   
 
   return (
     <AuthContext.Provider
