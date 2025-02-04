@@ -1,14 +1,30 @@
-table, td, th {  
-    border: 1px solid #030303;
-    text-align: left;
-    background-color: white;
-  }
-  
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-  
-  th, td {
-    padding: 15px;
-  }
+/* Táblázat stílus */
+table {
+  width: 100%;
+  border-collapse: collapse; /* A cellák közötti távolság eltüntetése */
+  font-family: Arial, sans-serif;
+  text-align: left;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+  white-space: nowrap; /* Megakadályozza a sorok törését */
+}
+
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9; /* Szürke háttér a páros sorokhoz */
+}
+
+/* Reszponzivitás - a táblázat görgethetővé tétele */
+.table-container {
+  overflow-x: auto;
+
+  margin: 20px 0;
+}
