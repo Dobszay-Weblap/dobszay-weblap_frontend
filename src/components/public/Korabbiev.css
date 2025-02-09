@@ -1,0 +1,19 @@
+.cim{
+    text-align: start;
+    color: blue;
+}
+
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.image-item {
+    max-width: 200px;
+    text-align: center;
+}
+
+.media-item {
+    margin: 10px;
+}
