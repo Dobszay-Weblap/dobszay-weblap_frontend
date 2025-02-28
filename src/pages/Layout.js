@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Outlet, Routes, Route, useLocation } from "react-router-dom";
+import { Link, Routes, Route, useLocation } from "react-router-dom";
 import { Nav, NavDropdown, Modal, Button } from "react-bootstrap";
 import "./Layout.css";
 import { useAuth } from "../contexts/AuthContext";
@@ -92,6 +92,14 @@ const Layout = () => {
                   <NavDropdown.Item as={Link} to="/korabbiev/2022">2022</NavDropdown.Item>
                   <NavDropdown.Item as={Link} to="/korabbiev/2021">2021</NavDropdown.Item>
                 </NavDropdown>
+
+                {user?.email === "dorka@gmail.hu" && (
+                <Nav.Item>
+                  <Link to="/ajanlok" className="nav-link" >
+                    Családi ajánlatok
+                  </Link>
+                </Nav.Item>
+                )}
               </>
             )}
           </Nav>

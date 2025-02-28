@@ -4,7 +4,8 @@ import { myAxios } from '../../contexts/MyAxios';
 
 const KorabbiEv = () => {
     const { year } = useParams(); // Lekérjük az évet a URL-ből
-    const [images, setImages] = useState(null);
+    const [images, setImages] = useState([]);
+    const [videos, setVideos] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -26,12 +27,15 @@ const KorabbiEv = () => {
         const fetchData = async () => {
             try {
                 const response = await myAxios.get(`http://localhost:8000/api/korabbiev/${parsedYear}`);
+
                 console.log("API válasz:", response.data);  // Logoljuk a választ
                 if (response.data.error) {
-                    setError(response.data.error); // Hibát adunk vissza, ha nincs adat
+                    setError(response.data.error);
                 } else {
-                    setImages(response.data.images);  // Ha van adat, tároljuk a képeket
+                    setImages(response.data.images ?? []);  
+                    setVideos(response.data.videos ?? []);  
                 }
+                             
             } catch (err) {
                 setError('Hiba történt az adatok lekérésekor');
                 console.error(err);
@@ -52,23 +56,41 @@ const KorabbiEv = () => {
 
     return (
         <div>
-            <h2>Képek a {year} évből</h2>
-            <div className="image-gallery">
-                {images.map((image, index) => (
-                    <div key={index} className="media-item">
-                        {image.endsWith('.mp4') ? (
-                            <video width="320" height="240" controls>
-                                <source src={`/video/${image}`} type="video/mp4" />
-                                Your browser does not support the video tag.
-                            </video>
-                        ) : (
-                            <img src={`/kep/${image}`} alt={`Media ${index + 1}`} />
-                        )}
+            <h2>Média a {year} évből</h2>
+    
+            {/* Képek megjelenítése */}
+            {images.length > 0 && (
+                <div>
+                    <h3>Képek</h3>
+                    <div className="image-gallery">
+                        {images.map((image, index) => (
+                            <div key={index} className="media-item">
+                                <img key={index} src={`/kep/${image}`} alt={`Kép ${index + 1}`} className="media-item" />
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
+                </div>
+            )}
+    
+            {/* Videók megjelenítése */}
+            {videos.length > 0 && (
+                <div>
+                    <h3>Videók</h3>
+                    <div className="video-gallery">
+                        {videos.map((video, index) => (
+                            <div key={index} className="media-item">
+                                <video width="320" height="240" controls>
+                                    <source src={`/storage/${video}`} type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
+    
 };
 
 export default KorabbiEv;
