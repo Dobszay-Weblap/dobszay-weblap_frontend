@@ -82,7 +82,7 @@ const Layout = () => {
                 </NavDropdown>
 
                 <Nav.Item>
-                  <Link to="/adatok" className="nav-link">
+                  <Link to="/adatok" className="nav-link" >
                     Adatok
                   </Link>
                 </Nav.Item>
@@ -121,7 +121,7 @@ const Layout = () => {
           <Routes>
             <Route path="/korabbiev/:year" element={<KorabbiEv />} />
             <Route path="/adatok" element={<Adatok />} /> {/* Adatok oldal */}
-            <Route path="/hazak" element={<Hazak />} /> {/* Házak oldal */}
+            <Route path="/hazak" element={<Hazak />} />
             {/* További route-ok ide kerülhetnek */}
           </Routes>
         </div>

@@ -27,6 +27,8 @@ if (typeof lakokList === 'string') {
           szobaMap[szoba.szoba_id] = szoba;
         });
         setFoglaltsag(szobaMap);
+/*         console.log(szobaMap);
+ */        
       })
       .catch((err) => console.error("Hiba a foglaltság lekérésekor:", err));
   }, []);

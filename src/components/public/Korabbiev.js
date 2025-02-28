@@ -6,6 +6,8 @@ const KorabbiEv = ({ year }) => {
     const [error, setError] = useState(null); // Hibaüzenet tárolás
 
     useEffect(() => {
+        console.log(year);
+        
         // Próbáljuk meg konvertálni a year-t számra
         const parsedYear = parseInt(year, 10); // parseInt-et használunk, hogy biztosan számot kapjunk
 
