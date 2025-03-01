@@ -19,8 +19,8 @@ const Adatok = () => {
     2: "#ffcc66",    // Narancs
     3: "#99ff99",    // Világoszöld
     4: "#66b3ff",    // Kék
-    5: "#9900cc",    // Lila
-    6: "#b30000",    // Sötétebb piros
+    5: "#9e42bd",    // Lila
+    6: "#d62727",    // Sötétebb piros
     7: "#996633",    // Barna
   };
 
@@ -64,7 +64,7 @@ const Adatok = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    myAxios.post("/csaladi-adatok", ujCsaladtag)
+    myAxios.post("api/csaladi-adatok", ujCsaladtag)
       .then((response) => {
         setAdatok([...adatok, response.data]);
         setIsModalOpen(false);

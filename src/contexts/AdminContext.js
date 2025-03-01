@@ -7,6 +7,7 @@ export const FileProvider = ({ children }) => {
 
   const [errors, setErrors] = useState({});
 
+
   const getLista = async (vegpont, callBack) => {
     try{
         const response =await myAxios.get(vegpont);

@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import Adatok from "../components/public/Adatok";
 import Hazak from "../components/public/Hazak";
 import KorabbiEv from "../components/public/Korabbiev";
+import Ajanlatok from "../components/public/Ajanlatok";
 
 
 const Layout = () => {
@@ -95,7 +96,7 @@ const Layout = () => {
 
                 {user?.email === "dorka@gmail.hu" && (
                 <Nav.Item>
-                  <Link to="/ajanlok" className="nav-link" >
+                  <Link to="/ajanlatok" className="nav-link" >
                     Családi ajánlatok
                   </Link>
                 </Nav.Item>
@@ -130,6 +131,7 @@ const Layout = () => {
             <Route path="/korabbiev/:year" element={<KorabbiEv />} />
             <Route path="/adatok" element={<Adatok />} /> {/* Adatok oldal */}
             <Route path="/hazak" element={<Hazak />} />
+            <Route path="/ajanlatok" element={<Ajanlatok />} />
             {/* További route-ok ide kerülhetnek */}
           </Routes>
         </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Ajanlok() {
+export default function Ajanlatok() {
   return (
     <div>
       
