@@ -1,4 +1,15 @@
-.table-container{
-    text-align: center;
 
+th, td {
+    border: 3px solid #141313 !important;
+    padding: 8px 12px;
+    white-space: nowrap; /* Megakadályozza a sorok törését */
+    text-align: center;
+  }
+
+.megjegyzes{
+    background-color: aqua;
+}
+
+.osszesito{
+    background-color: yellow;
 }

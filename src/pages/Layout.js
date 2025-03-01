@@ -3,11 +3,11 @@ import { Link, Routes, Route, useLocation } from "react-router-dom";
 import { Nav, NavDropdown, Modal, Button } from "react-bootstrap";
 import "./Layout.css";
 import { useAuth } from "../contexts/AuthContext";
-import Adatok from "../components/public/Adatok";
-import Hazak from "../components/public/Hazak";
-import KorabbiEv from "../components/public/Korabbiev";
-import Ajanlatok from "../components/public/Ajanlatok";
-import Etelek from "../components/public/Etelek";
+import KorabbiEv from "../components/Korabbiev";
+import Adatok from "../components/Adatok";
+import Hazak from "../components/Hazak";
+import Etelek from "../components/Etelek";
+import Ajanlatok from "../components/Ajanlatok";
 
 
 const Layout = () => {
@@ -104,6 +104,13 @@ const Layout = () => {
                 )}
               </>
             )}
+{user?.jogosultsagi_szint === "nezo" && (
+            <Nav.Item>
+                  <Link to="/etelek" className="nav-link" >
+                    Étel
+                  </Link>
+                </Nav.Item>
+)}
           </Nav>
         </div>
 

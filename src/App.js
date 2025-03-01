@@ -2,11 +2,11 @@ import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import Public from './pages/Public';
 import Layout from './pages/Layout';
-import Admin from './pages/admin/Admin';
-import Hazak from './components/public/Hazak';
-import Adatok from './components/public/Adatok';
-import KorabbiEv from './components/public/Korabbiev';
-import Etelek from './components/public/Etelek';
+import Hazak from './components/Hazak';
+import Etelek from './components/Etelek';
+import Adatok from './components/Adatok';
+import KorabbiEv from './components/Korabbiev';
+
 
 
 function App() {
