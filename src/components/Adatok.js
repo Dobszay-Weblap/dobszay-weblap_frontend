@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { myAxios } from "../../contexts/MyAxios";
+import { myAxios } from "../contexts/MyAxios";
 import "./Adatok.css";
 import { Button, Modal } from "react-bootstrap";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 const Adatok = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,9 +82,11 @@ const Adatok = () => {
   };
 
   return (
-    <div>
+    <div className="adatok">
       <h2>Családi Adatok</h2>
-      <Button variant="primary" onClick={handleModalOpen}>Új családtag hozzáadása
+      <Button variant="primary" className="button" onClick={handleModalOpen}>Új családtag hozzáadása
+      </Button>
+      <Button variant="primary"  onClick={handleModalOpen}>Szerkesztés
       </Button>
       <Modal show={isModalOpen} onHide={handleModalClose}>
         <Modal.Header closeButton>

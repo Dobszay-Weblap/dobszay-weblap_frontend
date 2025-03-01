@@ -7,6 +7,7 @@ import Adatok from "../components/public/Adatok";
 import Hazak from "../components/public/Hazak";
 import KorabbiEv from "../components/public/Korabbiev";
 import Ajanlatok from "../components/public/Ajanlatok";
+import Etelek from "../components/public/Etelek";
 
 
 const Layout = () => {
@@ -72,7 +73,7 @@ const Layout = () => {
             {user?.jogosultsagi_szint === "felhasznalo" && (
               <>
                 <NavDropdown title="Káptalan" id="kaptalan-dropdown">
-                  <NavDropdown.Item as={Link} to="/etel">Étel</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/etelek">Étel</NavDropdown.Item>
                   <NavDropdown.Item as={Link} to="/hazak">Házak</NavDropdown.Item>
                   <NavDropdown.Item as={Link} to="/csolimpia">Csolimpia</NavDropdown.Item>
                   <NavDropdown.Item as={Link} to="/sortablazat">Sörtáblázat</NavDropdown.Item>
@@ -132,6 +133,7 @@ const Layout = () => {
             <Route path="/adatok" element={<Adatok />} /> {/* Adatok oldal */}
             <Route path="/hazak" element={<Hazak />} />
             <Route path="/ajanlatok" element={<Ajanlatok />} />
+            <Route path="/etelek" element={<Etelek />} />
             {/* További route-ok ide kerülhetnek */}
           </Routes>
         </div>

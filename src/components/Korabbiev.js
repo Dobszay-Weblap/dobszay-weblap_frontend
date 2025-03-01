@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { myAxios } from '../../contexts/MyAxios';
+import { myAxios } from '../contexts/MyAxios';
 import Videok from './Videok';
 import Kepek from './Kepek';
 import "./Korabbiev.css";

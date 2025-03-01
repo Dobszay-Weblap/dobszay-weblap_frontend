@@ -1,16 +1,22 @@
 /* Táblázat stílus */
 table {
-  width: 500px;
-  border-collapse: collapse; /* A cellák közötti távolság eltüntetése */
   font-family: Arial, sans-serif;
-  text-align: center;
+  font-size: 12px;
   
 }
+
+.adatok{
+  text-align: center;
+}
+
+ .button{
+  margin-right:5px;
+  
+ }
 
 th, td {
   border: 3px solid #141313 !important;
   padding: 8px 12px;
-  text-align: left;
   white-space: nowrap; /* Megakadályozza a sorok törését */
   text-align: center;
 }
