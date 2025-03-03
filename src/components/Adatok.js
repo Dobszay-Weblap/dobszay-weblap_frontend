@@ -7,8 +7,6 @@ import { useAuth } from "../contexts/AuthContext";
 const Adatok = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
    const { user} = useAuth();
-   const [szuloId, setSzuloId] = useState(""); 
-   const [szuloNev, setSzuloNev] = useState(""); 
 
 
 
@@ -115,7 +113,7 @@ const Adatok = () => {
               <input type="number" name="unoka_generacio" placeholder="Unoka generáció" value={ujCsaladtag.unoka_generacio} onChange={handleChange} />
               <input type="number" name="dedunoka_generacio" placeholder="Dédunoka generáció" value={ujCsaladtag.dedunoka_generacio} onChange={handleChange} />
               {user?.jogosultsagi_szint === "admin" && (
-              <input type="text" placeholder="Szülő neve" value={szuloId} onChange={(e) => setSzuloNev(e.target.value)} />
+              <input type="text" placeholder="Szülő neve"  />
               )}
 
           </form>

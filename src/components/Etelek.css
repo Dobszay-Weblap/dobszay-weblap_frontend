@@ -11,5 +11,77 @@ th, td {
 }
 
 .osszesito{
-    background-color: yellow;
+    background-color: yellow !important;
 }
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.etel-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.etel-table th, .etel-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.etel-table th {
+  background-color: #f4f4f4;
+}
+.input2 {
+    width: 60px;
+    padding: 5px;
+    text-align: center;
+    
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+  }
+  
+  button {
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .etel-table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  }
+  
+  table {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+  }
+  
+  .adatok{
+    text-align: center;
+  }
+  
+   .button{
+    margin-right:5px;
+    
+   }
+  
+  
+  th {
+    background-color: #e34242;
+    font-weight: bold;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f9f9f9; /* Szürke háttér a páros sorokhoz */
+  }
+  

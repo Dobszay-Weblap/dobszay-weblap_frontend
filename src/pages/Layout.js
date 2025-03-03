@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, Routes, Route, useLocation } from "react-router-dom";
+import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { Nav, NavDropdown, Modal, Button } from "react-bootstrap";
 import "./Layout.css";
 import { useAuth } from "../contexts/AuthContext";
@@ -15,6 +15,7 @@ const Layout = () => {
   const [backgroundImage, setBackgroundImage] = useState("/images/default-background.jpg"); // Kezdeti háttérkép
   const location = useLocation();
   const { user, login, logout } = useAuth(); // AuthContextből bejelentkezés és kijelentkezés funkciók
+  const navigate = useNavigate();
 
   // Bejelentkezési művelet
   const handleLogin = async () => {
@@ -33,6 +34,10 @@ const Layout = () => {
   const handleLogout = () => {
     logout(); // Kijelentkezés
     setBackgroundImage("/images/default-background.jpg"); // Kijelentkezéskor visszaállítjuk az alap háttérképet
+  };
+
+  const handleForgotPassword = () => {
+    navigate("/"); // A megfelelő oldalra navigálás
   };
 
   useEffect(() => {
@@ -122,6 +127,9 @@ const Layout = () => {
           <Modal.Body>
             <input id="email" type="text" placeholder="Email" className="form-control mb-2" />
             <input id="password" type="password" placeholder="Jelszó" className="form-control" />
+            <button onClick={handleForgotPassword} className="btn btn-link">
+            Elfelejtett jelszó?
+          </button>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={() => setShowLogin(false)}>
