@@ -6,6 +6,8 @@ import Hazak from './components/Hazak';
 import Etelek from './components/Etelek';
 import Adatok from './components/Adatok';
 import KorabbiEv from './components/Korabbiev';
+import ResetPassword from './pages/ResetPassword';
+import ForgotPassword from './pages/ForgotPassword';
 
 
 
@@ -17,6 +19,8 @@ function App() {
         <Route path="hazak" element={<Hazak />} />
         <Route path="adatok" element={<Adatok />} />
         <Route path="etelek" element={<Etelek />} />
+        <Route path="/elfelejtett-jelszo" element={<ForgotPassword />} />
+        <Route path="/password-reset" element={<ResetPassword />} />
         
         {/* Útvonal a korábbi évekhez */}
         <Route path="korabbiev/:year" element={<KorabbiEv />} />

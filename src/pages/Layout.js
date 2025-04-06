@@ -8,6 +8,8 @@ import Adatok from "../components/Adatok";
 import Hazak from "../components/Hazak";
 import Etelek from "../components/Etelek";
 import Ajanlatok from "../components/Ajanlatok";
+import ForgotPassword from "./ForgotPassword";
+import ResetPassword from "./ResetPassword";
 
 
 const Layout = () => {
@@ -16,6 +18,9 @@ const Layout = () => {
   const location = useLocation();
   const { user, login, logout } = useAuth(); // AuthContextből bejelentkezés és kijelentkezés funkciók
   const navigate = useNavigate();
+
+
+  
 
   // Bejelentkezési művelet
   const handleLogin = async () => {
@@ -36,10 +41,7 @@ const Layout = () => {
     setBackgroundImage("/images/default-background.jpg"); // Kijelentkezéskor visszaállítjuk az alap háttérképet
   };
 
-  const handleForgotPassword = () => {
-    navigate("/"); // A megfelelő oldalra navigálás
-  };
-
+  
   useEffect(() => {
     if (user) {
       // Ha van bejelentkezett felhasználó, más háttérkép jelenik meg
@@ -50,6 +52,11 @@ const Layout = () => {
     }
   }, [user]);
 
+
+  const handleForgotPassword = () => {
+    navigate("/elfelejtett-jelszo");
+    setShowLogin(false); // A megfelelő oldalra navigálás
+  };
   return (
     <div className="App" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}>
       <header className="App-header">
@@ -149,6 +156,8 @@ const Layout = () => {
             <Route path="/hazak" element={<Hazak />} />
             <Route path="/ajanlatok" element={<Ajanlatok />} />
             <Route path="/etelek" element={<Etelek />} />
+            <Route path="/elfelejtett-jelszo" element={<ForgotPassword />} />
+                    <Route path="/password-reset" element={<ResetPassword />} />
             {/* További route-ok ide kerülhetnek */}
           </Routes>
         </div>
