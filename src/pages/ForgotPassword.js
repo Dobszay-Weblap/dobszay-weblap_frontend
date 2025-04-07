@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { myAxios } from '../contexts/MyAxios';
-
+import "./Layout.css";
 
 
 export default function ForgotPassword() {
@@ -43,7 +43,7 @@ export default function ForgotPassword() {
                 <p id="forgotText">Küldünk egy emailt, ami segít helyreállítani a jelszót.</p>
                 <br />
                 <form id="forgotpasswordForm" onSubmit={handleSubmit}>
-                    <div className="input-group mb-3">
+                    <div className="input-group1">
                         <input 
                             type="email" 
                             id="email" 

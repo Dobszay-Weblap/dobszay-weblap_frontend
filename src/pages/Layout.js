@@ -10,13 +10,18 @@ import Etelek from "../components/Etelek";
 import Ajanlatok from "../components/Ajanlatok";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
+import { myAxios } from "../contexts/MyAxios";
+import PasswordChangeFirst from "./PasswordChangeFirst";
 
 
 const Layout = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState("/images/default-background.jpg"); // Kezdeti háttérkép
   const location = useLocation();
-  const { user, login, logout } = useAuth(); // AuthContextből bejelentkezés és kijelentkezés funkciók
+  const { user, login, logout } = useAuth(); 
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [userDetails, setUserDetails] = useState(null); // részletes user-adatok
+
   const navigate = useNavigate();
 
 
@@ -41,6 +46,18 @@ const Layout = () => {
     setBackgroundImage("/images/default-background.jpg"); // Kijelentkezéskor visszaállítjuk az alap háttérképet
   };
 
+
+  useEffect(() => {
+    if (user) {
+      myAxios.get("/api/user").then((res) => {
+        setUserDetails(res.data);
+        if (!res.data.password_changed) {
+          setShowPasswordModal(true);
+        }
+      });
+    }
+  }, [user]);
+  
   
   useEffect(() => {
     if (user) {
@@ -171,9 +188,21 @@ const Layout = () => {
 
       
 
-      <footer>
-        <p>@Minden jog fenntartva!</p>
-      </footer>
+{userDetails && (
+  <PasswordChangeFirst
+    show={showPasswordModal}
+    onHide={() => setShowPasswordModal(false)}
+    onPasswordChanged={() => {
+      setShowPasswordModal(false);
+      setUserDetails({ ...userDetails, password_changed: true });
+    }}
+  />
+)}
+
+<footer>
+  <p>@Minden jog fenntartva!</p>
+</footer>
+
     </div>
   );
 };

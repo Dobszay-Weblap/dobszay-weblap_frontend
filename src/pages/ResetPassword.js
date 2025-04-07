@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
+import "./Layout.css";
 import { useEffect } from 'react';
 import { myAxios } from '../contexts/MyAxios';
 
@@ -70,11 +70,11 @@ const ResetPassword = () => {
     return (
         <div className="resetpasswordpage">
             <article>
-                <h2>Jelszó visszaállítása</h2>
+                <h2 className="cim">Jelszó visszaállítása</h2>
                 <span>Email:  {email}</span>
 
                 <form onSubmit={handleSubmit}>
-                    <div className="input-group mb-3">
+                    <div className="input-group">
                         <input
                             type="password"
                             placeholder="Új jelszó"
