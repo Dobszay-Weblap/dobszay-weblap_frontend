@@ -7,6 +7,57 @@ import { useAuth } from "../contexts/AuthContext";
 const Adatok = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
    const { user} = useAuth();
+   const [szerkesztesMod, setSzerkesztesMod] = useState(false);
+    const [aktualisSzemely, setAktualisSzemely] = useState(null);
+
+
+   function hierarchikusRendez(adatok) {
+  const kodMap = new Map();
+  adatok.forEach((item) => kodMap.set(String(item.matebazsi_kod), item));
+
+  // Szülő→gyerek viszonyt építünk
+  const gyerekMap = new Map();
+  adatok.forEach((item) => {
+    const kod = String(item.matebazsi_kod);
+    const szuloKod = kod.slice(0, -1); // Pl. "334" → "33"
+    if (!gyerekMap.has(szuloKod)) {
+      gyerekMap.set(szuloKod, []);
+    }
+    gyerekMap.get(szuloKod).push(item);
+  });
+
+  // Rekurzív sorrendezés
+  const eredmeny = [];
+
+  function bejar(szuloKod = "") {
+    const gyerekek = (gyerekMap.get(szuloKod) || []).sort((a, b) =>
+      String(a.matebazsi_kod).localeCompare(String(b.matebazsi_kod), undefined, { numeric: true })
+    );
+
+    for (const gyerek of gyerekek) {
+      eredmeny.push(gyerek);
+      bejar(String(gyerek.matebazsi_kod)); // Gyermek gyerekeit is megnézzük
+    }
+  }
+
+  bejar(); // üres stringgel indulunk (pl. "1", "2", "3" mindennek nincs szülő)
+
+  return eredmeny;
+}
+
+
+
+   // Ebből levágjuk az utolsó számjegyet → "324" → "32"
+const getSzuloKod = (kod) => {
+  const str = String(kod);
+  return str.slice(0, -1);
+};
+
+// Visszaadja a szülő adatait, ha megtalálja
+const findSzuloAdat = (kod) => {
+  const szuloKod = getSzuloKod(kod);
+  return adatok.find(a => String(a.matebazsi_kod) === szuloKod);
+};
 
 
 
@@ -56,18 +107,44 @@ const Adatok = () => {
       .catch((error) => console.error("Hiba az adatok lekérdezésekor:", error));
   }, []);
 
-  const handleChange = (e) => {
-    setUjCsaladtag({ ...ujCsaladtag, [e.target.name]: e.target.value });
-  };
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  const updatedData = { ...ujCsaladtag, [name]: value };
 
-  const handleSubmit = (e) => {
+  // Ha matebazsi_kod módosul, próbáljuk meg beállítani a szülőt is
+  if (name === "matebazsi_kod") {
+    const szulo = findSzuloAdat(value);
+    if (szulo) {
+      updatedData.szulo_id = szulo.id;
+    } else {
+      updatedData.szulo_id = ""; // Ha nem található
+    }
+  }
+
+  setUjCsaladtag(updatedData);
+};
+
+
+ const handleSubmit = (e) => {
     e.preventDefault();
-    myAxios.post("api/csaladi-adatok", ujCsaladtag)
-      .then((response) => {
-        setAdatok([...adatok, response.data]);
-        setIsModalOpen(false);
-      })
-      .catch((error) => console.error("Hiba:", error));
+
+    if (szerkesztesMod && aktualisSzemely) {
+      myAxios.put(`api/csaladi-adatok/${aktualisSzemely.id}`, ujCsaladtag)
+        .then((response) => {
+          const frissitett = adatok.map(a => a.id === aktualisSzemely.id ? response.data : a);
+          setAdatok(frissitett);
+          setIsModalOpen(false);
+          setAktualisSzemely(null);
+          setSzerkesztesMod(false);
+        });
+    } else {
+      myAxios.post("api/csaladi-adatok", ujCsaladtag)
+        .then((response) => {
+          setAdatok([...adatok, response.data]);
+          setIsModalOpen(false);
+        })
+        .catch((error) => console.error("Hiba:", error));
+    }
   };
   
   const handleModalOpen = () => {
@@ -79,20 +156,34 @@ const Adatok = () => {
     setIsModalOpen(false);
   };
 
+const rendezettAdatok = hierarchikusRendez(adatok);
+
+
+
+
   return (
     <div className="adatok">
       <h2>Családi Adatok</h2>
-      <Button variant="primary" className="button" onClick={handleModalOpen}>Új családtag hozzáadása
-      </Button>
-      <Button variant="primary"  onClick={handleModalOpen}>Szerkesztés
-      </Button>
+      <Button variant="primary" onClick={() => {
+        setUjCsaladtag({
+          nev: "", mobil_telefonszam: "", vonalas_telefon: "", cim: "",
+          szuletesi_ev: "", szulinap: "", nevnap: "", email: "", skype: "",
+          csaladsorszam: "", matebazsi_kod: "", sor_szamlalo: "", becenev_sor: "",
+          bankszamla: "", revolut_id: "", ki_ki: "", naptar: "",
+          elso_generacio: "", unoka_generacio: "", dedunoka_generacio: "", szulo_id: ""
+        });
+        setSzerkesztesMod(false);
+        setIsModalOpen(true);
+      }}>Új családtag hozzáadása</Button>
+
+      <Button variant="primary" onClick={() => setSzerkesztesMod(true)}>Szerkesztés</Button>
       <Modal show={isModalOpen} onHide={handleModalClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Új családtag hozzáadása</Modal.Title>
+          <Modal.Title>{szerkesztesMod ? "Családtag szerkesztése" : "Új családtag hozzáadása"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit}>
-          <input type="text" name="nev" placeholder="Név" value={ujCsaladtag.nev} onChange={handleChange} required />
+            <input type="text" name="nev" placeholder="Név" value={ujCsaladtag.nev} onChange={handleChange} required />
             	<input type="text" name="mobil_telefonszam" placeholder="Mobil" value={ujCsaladtag.mobil_telefonszam} onChange={handleChange} />
             	<input type="text" name="vonalas_telefon" placeholder="Vonalas" value={ujCsaladtag.vonalas_telefon} onChange={handleChange} />
             	<input type="text" name="cim" placeholder="Cím" value={ujCsaladtag.cim} onChange={handleChange} />
@@ -103,6 +194,16 @@ const Adatok = () => {
             	<input type="text" name="skype" placeholder="Skype" value={ujCsaladtag.skype} onChange={handleChange} />
               <input type="text" name="csaladsorszam" placeholder="Családsorszám" value={ujCsaladtag.csaladsorszam} onChange={handleChange} />
               <input type="number" name="matebazsi_kod" placeholder="MátéBazsi kód" value={ujCsaladtag.matebazsi_kod} onChange={handleChange} />
+              {/* {ujCsaladtag.matebazsi_kod && (
+                (() => {
+                  const szulo = findSzuloAdat(ujCsaladtag.matebazsi_kod);
+                  return (
+                    <div style={{ marginBottom: '8px', fontStyle: 'italic', fontSize: '0.9em' }}>
+                      Ez a személy <strong>{szulo ? szulo.nev : `"${getSzuloKod(ujCsaladtag.matebazsi_kod)}"`}</strong> alá tartozik
+                    </div>
+                  );
+                })()
+              )} */}
               <input type="number" name="sor_szamlalo" placeholder="Sör számláló" value={ujCsaladtag.sor_szamlalo} onChange={handleChange} />
               <input type="text" name="becenev_sor" placeholder="Becenév" value={ujCsaladtag.becenev_sor} onChange={handleChange} />
               <input type="text" name="bankszamla" placeholder="Bankszámlaszám" value={ujCsaladtag.bankszamla} onChange={handleChange} />
@@ -119,12 +220,8 @@ const Adatok = () => {
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleModalClose}>
-            Mégse
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Hozzáadás
-          </Button>
+          <Button variant="secondary" onClick={() => setIsModalOpen(false)}>Mégse</Button>
+          <Button variant="primary" onClick={handleSubmit}>{szerkesztesMod ? "Mentés" : "Hozzáadás"}</Button>
         </Modal.Footer>
       </Modal>
       <div className="table-container">
@@ -153,10 +250,21 @@ const Adatok = () => {
               <th>Unoka generáció</th>
               <th>Dédunoka generáció</th>
             </tr>
+            
           </thead>
-          <tbody>
-            {adatok.map((adat) => (
-              <tr key={adat.id} style={{ backgroundColor: getCsaladSzin(adat.csaladsorszam) }}>
+           <tbody>
+            {rendezettAdatok.map((adat) => (
+              <tr
+                key={adat.id}
+                onClick={() => {
+                  if (szerkesztesMod) {
+                    setUjCsaladtag(adat);
+                    setAktualisSzemely(adat);
+                    setIsModalOpen(true);
+                  }
+                }}
+                style={{ backgroundColor: getCsaladSzin(adat.csaladsorszam), cursor: szerkesztesMod ? "pointer" : "default" }}
+              >
                 <td>{adat.nev}</td>
                 <td>{adat.mobil_telefonszam || ""}</td>
                 <td>{adat.vonalas_telefon || ""}</td>
