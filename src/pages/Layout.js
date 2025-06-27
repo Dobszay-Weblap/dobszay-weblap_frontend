@@ -12,6 +12,7 @@ import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 import { myAxios } from "../contexts/MyAxios";
 import PasswordChangeFirst from "./PasswordChangeFirst";
+import Szabalyok from "../components/Szabalyok";
 
 
 const Layout = () => {
@@ -169,12 +170,14 @@ const Layout = () => {
         <div className="oldaltartalom">
           <Routes>
             <Route path="/korabbiev/:year" element={<KorabbiEv />} />
-            <Route path="/adatok" element={<Adatok />} /> {/* Adatok oldal */}
+            <Route path="/adatok" element={<Adatok />} />
             <Route path="/hazak" element={<Hazak />} />
             <Route path="/ajanlatok" element={<Ajanlatok />} />
             <Route path="/etelek" element={<Etelek />} />
+            <Route path="/szabalyok" element={<Szabalyok />} />
             <Route path="/elfelejtett-jelszo" element={<ForgotPassword />} />
-                    <Route path="/password-reset" element={<ResetPassword />} />
+            <Route path="/password-reset" element={<ResetPassword />} />
+                    
             {/* További route-ok ide kerülhetnek */}
           </Routes>
         </div>

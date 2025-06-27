@@ -15,18 +15,17 @@ const Adatok = () => {
   const kodMap = new Map();
   adatok.forEach((item) => kodMap.set(String(item.matebazsi_kod), item));
 
-  // Szülő→gyerek viszonyt építünk
+
   const gyerekMap = new Map();
   adatok.forEach((item) => {
     const kod = String(item.matebazsi_kod);
-    const szuloKod = kod.slice(0, -1); // Pl. "334" → "33"
+    const szuloKod = kod.slice(0, -1);
     if (!gyerekMap.has(szuloKod)) {
       gyerekMap.set(szuloKod, []);
     }
     gyerekMap.get(szuloKod).push(item);
   });
 
-  // Rekurzív sorrendezés
   const eredmeny = [];
 
   function bejar(szuloKod = "") {
@@ -36,24 +35,20 @@ const Adatok = () => {
 
     for (const gyerek of gyerekek) {
       eredmeny.push(gyerek);
-      bejar(String(gyerek.matebazsi_kod)); // Gyermek gyerekeit is megnézzük
+      bejar(String(gyerek.matebazsi_kod));
     }
   }
 
-  bejar(); // üres stringgel indulunk (pl. "1", "2", "3" mindennek nincs szülő)
+  bejar(); 
 
   return eredmeny;
 }
 
-
-
-   // Ebből levágjuk az utolsó számjegyet → "324" → "32"
 const getSzuloKod = (kod) => {
   const str = String(kod);
   return str.slice(0, -1);
 };
 
-// Visszaadja a szülő adatait, ha megtalálja
 const findSzuloAdat = (kod) => {
   const szuloKod = getSzuloKod(kod);
   return adatok.find(a => String(a.matebazsi_kod) === szuloKod);
