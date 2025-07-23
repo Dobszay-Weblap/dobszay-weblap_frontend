@@ -3,13 +3,13 @@ import './App.css';
 import Public from './pages/Public';
 import Layout from './pages/Layout';
 import Hazak from './components/Hazak';
-import Etelek from './components/Etelek';
 
 import Adatok from './components/Adatok';
 import KorabbiEv from './components/Korabbiev';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
 import Szabalyok from './components/Szabalyok';
+import Rendeles from './components/Rendeles';
 
 
 
@@ -20,7 +20,7 @@ function App() {
         <Route path="/*" element={<Public />} />
         <Route path="hazak" element={<Hazak />} />
         <Route path="adatok" element={<Adatok />} />
-        <Route path="etelek" element={<Etelek />} />
+        <Route path="etelek" element={<Rendeles />} />
         <Route path="/szabalyok" element={<Szabalyok />} />
         <Route path="/elfelejtett-jelszo" element={<ForgotPassword />} />
         <Route path="/password-reset" element={<ResetPassword />} />

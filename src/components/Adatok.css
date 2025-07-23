@@ -1,10 +1,11 @@
-/* Táblázat stílus */
-.table-container {
+.adatok-table-container {
   overflow: auto;
- max-height: 70vh; 
+  max-height: 70vh;
+  margin: 20px 0;
+  
 }
 
-table {
+.adatok-table {
   font-family: Arial, sans-serif;
   font-size: 12px;
   border-collapse: collapse;
@@ -12,60 +13,47 @@ table {
   min-width: 1000px;
 }
 
-.adatok{
-  text-align: center;
-}
-
- .button{
-  margin-right:5px;
-  
- }
-
- /* A név oszlop maradjon fix (sticky) */
-td:first-child {
+/* A név oszlop legyen fix (sticky) */
+.adatok-table td:first-child {
   position: sticky;
   left: 0;
   z-index: 1;
-  background-color: inherit; /* Ezzel a tr színét örökli */
-  backdrop-filter: blur(2px); /* Opcionális, ha áttetszést akarsz */
+  background-color: inherit;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-/* A fejléc is legyen fixen látható */
-thead th {
+/* A fejléc legyen mindig látható */
+.adatok-table thead th {
   position: sticky;
   top: 0;
   z-index: 2;
 }
 
- thead th,
-tbody td {
+/* Cellák */
+.adatok-table thead th,
+.adatok-table tbody td {
   padding: 8px;
   border: 1px solid #ccc;
   white-space: nowrap;
 }
 
-th, td {
+.adatok-table th,
+.adatok-table td {
   border: 3px solid #141313 !important;
   padding: 8px 12px;
-  white-space: nowrap; /* Megakadályozza a sorok törését */
   text-align: center;
+  white-space: nowrap;
 }
 
-th {
+.adatok-table th {
   background-color: #eed6d6;
   font-weight: bold;
 }
 
-tr:nth-child(even) {
-  background-color: #f9f9f9; /* Szürke háttér a páros sorokhoz */
+.adatok-table tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
-/* Reszponzivitás - a táblázat görgethetővé tétele */
-.table-container {
-  overflow-x: auto;
-
-  margin: 20px 0;
-}
 
 .modal {
   position: fixed;

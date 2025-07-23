@@ -6,13 +6,14 @@ import { useAuth } from "../contexts/AuthContext";
 import KorabbiEv from "../components/Korabbiev";
 import Adatok from "../components/Adatok";
 import Hazak from "../components/Hazak";
-import Etelek from "../components/Etelek";
+import Etelek from "../components/Rendeles";
 import Ajanlatok from "../components/Ajanlatok";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 import { myAxios } from "../contexts/MyAxios";
 import PasswordChangeFirst from "./PasswordChangeFirst";
 import Szabalyok from "../components/Szabalyok";
+import EtelekOsszesito from "../components/EtelekOsszesito";
 
 
 const Layout = () => {
@@ -136,7 +137,7 @@ const Layout = () => {
             )}
 {user?.jogosultsagi_szint === "nezo" && (
             <Nav.Item>
-                  <Link to="/etelek" className="nav-link" >
+                  <Link to="/etelosszesito" className="nav-link" >
                     Étel
                   </Link>
                 </Nav.Item>
@@ -174,6 +175,7 @@ const Layout = () => {
             <Route path="/hazak" element={<Hazak />} />
             <Route path="/ajanlatok" element={<Ajanlatok />} />
             <Route path="/etelek" element={<Etelek />} />
+            <Route path="/etelosszesito" element={<EtelekOsszesito />} />
             <Route path="/szabalyok" element={<Szabalyok />} />
             <Route path="/elfelejtett-jelszo" element={<ForgotPassword />} />
             <Route path="/password-reset" element={<ResetPassword />} />

@@ -1,20 +1,4 @@
-
-th, td {
-    border: 3px solid #141313 !important;
-    padding: 8px 12px;
-    white-space: nowrap; /* Megakadályozza a sorok törését */
-    text-align: center;
-  }
-
-.megjegyzes{
-    background-color: aqua;
-}
-
-.osszesito{
-    background-color: yellow !important;
-}
-
-.table-container {
+.etel-table-container {
   width: 100%;
   overflow-x: auto;
   margin: 20px auto;
@@ -24,64 +8,72 @@ th, td {
 .etel-table {
   width: 100%;
   border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
 }
 
-.etel-table th, .etel-table td {
+.etel-table th,
+.etel-table td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: center;
+  white-space: nowrap;
 }
 
 .etel-table th {
   background-color: #f4f4f4;
+  font-weight: bold;
 }
-.input2 {
-    width: 60px;
-    padding: 5px;
-    text-align: center;
-    
-  }
 
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button{
-    -webkit-appearance: none;
+.etel-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.etel-table td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background-color: inherit;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.etel-table .osszesito {
+  background-color: yellow !important;
+}
+
+.etel-table .input2 {
+  width: 60px;
+  padding: 5px;
+  text-align: center;
+}
+
+.etel-table .button {
+  margin-right: 5px;
+}
+
+.etel-table .adatok {
+  text-align: center;
+}
+
+.etel-table .megjegyzes {
+  background-color: aqua;
+}
+
+@media screen and (max-width: 600px) {
+  .etel-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
   }
-  
-  button {
-    padding: 5px 10px;
-    margin: 5px;
-    cursor: pointer;
-  }
-  
-  @media screen and (max-width: 600px) {
-    .etel-table {
-      display: block;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-  }
-  
-  table {
-    font-family: Arial, sans-serif;
-    font-size: 12px;
-  }
-  
-  .adatok{
-    text-align: center;
-  }
-  
-   .button{
-    margin-right:5px;
-    
-   }
-  
-  
-  th {
-    background-color: #e34242;
-    font-weight: bold;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #f9f9f9; /* Szürke háttér a páros sorokhoz */
-  }
-  
+}
+
+.etel-table input::-webkit-outer-spin-button,
+.etel-table input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.etel-table button {
+  padding: 5px 10px;
+  margin: 5px;
+  cursor: pointer;
+}

@@ -208,9 +208,6 @@ const rendezettAdatok = hierarchikusRendez(adatok);
               <input type="number" name="elso_generacio" placeholder="Első generáció" value={ujCsaladtag.elso_generacio} onChange={handleChange} />
               <input type="number" name="unoka_generacio" placeholder="Unoka generáció" value={ujCsaladtag.unoka_generacio} onChange={handleChange} />
               <input type="number" name="dedunoka_generacio" placeholder="Dédunoka generáció" value={ujCsaladtag.dedunoka_generacio} onChange={handleChange} />
-              {user?.jogosultsagi_szint === "admin" && (
-              <input type="text" placeholder="Szülő neve"  />
-              )}
 
           </form>
         </Modal.Body>
@@ -219,9 +216,8 @@ const rendezettAdatok = hierarchikusRendez(adatok);
           <Button variant="primary" onClick={handleSubmit}>{szerkesztesMod ? "Mentés" : "Hozzáadás"}</Button>
         </Modal.Footer>
       </Modal>
-      <div className="table-container">
-        
-        <table>
+      <div className="adatok-table-container">
+        <table className="adatok-table">
           <thead>
             <tr>
               <th>Név</th>
