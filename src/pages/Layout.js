@@ -101,7 +101,7 @@ const Layout = () => {
                 </Link>
               </Nav.Item>
             )}
-            {user?.jogosultsagi_szint === "felhasznalo" || "admin" && (
+            {(user?.jogosultsagi_szint === "felhasznalo" || user?.jogosultsagi_szint === "admin") && (
               <>
                 <NavDropdown title="Káptalan" id="kaptalan-dropdown">
                   <NavDropdown.Item as={Link} to="/etelek">Étel</NavDropdown.Item>
