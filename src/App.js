@@ -18,12 +18,6 @@ function App() {
     <Routes>
       <Route path="/*" element={<Layout />}>
         <Route index element={<Public />} />
-        {/* <Route path="hazak" element={<Hazak />} />
-        <Route path="adatok" element={<Adatok />} />
-        <Route path="etelek" element={<Rendeles />} />
-        <Route path="/szabalyok" element={<Szabalyok />} />
-        <Route path="/elfelejtett-jelszo" element={<ForgotPassword />} />
-        <Route path="/password-reset" element={<ResetPassword />} /> */}
 
         <Route path="hazak" element={<Hazak />} />
         <Route path="adatok" element={<Adatok />} />
@@ -35,8 +29,7 @@ function App() {
         <Route path="password-reset" element={<ResetPassword />} />
         <Route path="korabbiev/:year" element={<KorabbiEv />} />
 
-        {/* Útvonal a korábbi évekhez */}
-        <Route path="korabbiev/:year" element={<KorabbiEv />} />
+
       </Route>
     </Routes>
   );
