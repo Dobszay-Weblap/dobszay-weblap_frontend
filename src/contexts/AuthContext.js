@@ -17,33 +17,41 @@ export const AuthProvider = ({ children }) => {
 const login = async ({ email, password }) => {
   await csrf();
   try {
-    const response = await myAxios.post("/login", { email, password });
+    const response = await myAxios.post("/api/login", { email, password }); // ⬅️ /api/login
 
-const token = response.data.token; // ezt vedd ki a válaszból!
-const userData = response.data.user ?? response.data;
+    console.log("Login response:", response.data);
 
-const normalizedGroups = userData.csoportok?.map((group) => ({
-  id: group.id,
-  nev: group.nev,
-})) || [];
+    const token = response.data.token || response.data.access_token;
+    const userData = response.data.user;
 
-setUser({
-  ...userData,
-  csoportok: normalizedGroups,
-});
+    if (!userData) {
+      console.error("Nincs user adat a válaszban:", response.data);
+      throw new Error("Hibás válasz a szervertől");
+    }
 
-setIsLoggedIn(true);
-localStorage.setItem("access_token", token);
-myAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    const normalizedGroups = userData.csoportok?.map((group) => ({
+      id: group.id,
+      nev: group.nev,
+    })) || [];
 
-  
+    const userWithGroups = {
+      ...userData,
+      csoportok: normalizedGroups,
+    };
+
+    setUser(userWithGroups);
+    setIsLoggedIn(true);
+    localStorage.setItem("access_token", token);
+    myAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+    return userWithGroups;
 
   } catch (error) {
     console.error("Login error:", error);
+    console.error("Response data:", error.response?.data);
     throw error;
   }
 };
-
 
   // Kijelentkezés
   const logout = async () => {

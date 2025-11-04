@@ -37,11 +37,21 @@ const Layout = () => {
       console.log("Email vagy jelszó hiányzik!");
       return;
     }
-    console.log("Küldendő adatok:", { email, password }); // Debugging
-    await login({ email, password });
-    setShowLogin(false); // Modal bezárása sikeres bejelentkezés után
-    setBackgroundImage("/images/user-logged-in-background.jpg"); // Bejelentkezés utáni háttérkép
+    
+    console.log("Küldendő adatok:", { email, password });
+    
+    try {
+      // A login most már visszaadja a user adatokat
+      await login({ email, password });
+      
+      setShowLogin(false);
+      setBackgroundImage("/images/user-logged-in-background.jpg");
+      
+    } catch (error) {
+      console.error("Bejelentkezési hiba:", error);
+    }
   };
+
 
   const handleLogout = () => {
     logout(); // Kijelentkezés

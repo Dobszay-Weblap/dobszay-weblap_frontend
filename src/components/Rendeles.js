@@ -2,22 +2,22 @@ import React, { useState, useEffect } from "react";
 import "./Etelek.css";
 import { myAxios } from "../contexts/MyAxios";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 const Etelek = () => {
   const [menuk, setMenuk] = useState([]);
   const [etelek, setEtelek] = useState([]);
   const [editingId, setEditingId] = useState(null);
+  const [editingMenuId, setEditingMenuId] = useState(null);
   const [editedData, setEditedData] = useState({});
+  const [editedMenuData, setEditedMenuData] = useState({});
   const { user } = useAuth();
 
   const uniqueDates = [...new Set(etelek.map(e => e.datum))];
 
-useEffect(() => {
-  console.log("Bejelentkezett felhasználó:", user);
-  console.log("Csoportjai:", user?.csoportok);
-}, [user]);
-
+  useEffect(() => {
+    console.log("Bejelentkezett felhasználó:", user);
+    console.log("Csoportjai:", user?.csoportok);
+  }, [user]);
 
   useEffect(() => {
     myAxios.get("/api/menus")
@@ -25,20 +25,25 @@ useEffect(() => {
       .catch((err) => console.error("Menü hiba:", err));
 
     myAxios.get("/api/etelek")
-      .then((res) => setEtelek(res.data))
+      .then((res) => {
+        console.log("Lekért ételek:", res.data);
+        setEtelek(res.data);
+      })
       .catch((err) => console.error("Étel hiba:", err));
+  }, [user]);
 
-      myAxios.get("/api/user")
-  }, []);
+  const canEdit = (etel) => {
+    if (!user) return false;
+    if (user?.jogosultsagi_szint === "admin") return true;
+    if (!user?.csoportok || !etel.csoport_id) return false;
+    return user.csoportok.some((csoport) => csoport.id === etel.csoport_id);
+  };
 
-const canEdit = (etel) => {
-  if (!user) return false;
-  if (user?.jogosultsagi_szint === "admin") return true;
-  if (!user?.csoportok || !etel.csoport_id) return false;
-  return user.csoportok.some((csoport) => csoport.id === etel.csoport_id);
-};
+  const isAdmin = () => {
+    return user?.jogosultsagi_szint === "admin";
+  };
 
-
+  // Étel szerkesztés
   const handleEdit = (etel) => {
     setEditingId(etel.id);
     setEditedData((prev) => ({
@@ -63,10 +68,45 @@ const canEdit = (etel) => {
       datum: etel.datum
     })
       .then((res) => {
-        setEtelek(etelek.map(item => item.id === etel.id ? res.data : item));
+        const updatedEtel = {
+          ...res.data,
+          adag_A: Number(res.data.adag_A) || 0,
+          adag_B: Number(res.data.adag_B) || 0,
+          adag_C: Number(res.data.adag_C) || 0,
+        };
+        
+        setEtelek(etelek.map(item => item.id === etel.id ? updatedEtel : item));
         setEditingId(null);
       })
       .catch((err) => console.error("Mentési hiba:", err));
+  };
+
+  // Menü szerkesztés (csak admin)
+  const handleEditMenu = (menu) => {
+    setEditingMenuId(menu.id);
+    setEditedMenuData((prev) => ({
+      ...prev,
+      [menu.id]: menu
+    }));
+  };
+
+  const handleMenuChange = (id, field, value) => {
+    setEditedMenuData((prev) => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        [field]: value
+      }
+    }));
+  };
+
+  const handleSaveMenu = (menu) => {
+    myAxios.put(`/api/menus/${menu.id}`, editedMenuData[menu.id])
+      .then((res) => {
+        setMenuk(menuk.map(item => item.id === menu.id ? res.data : item));
+        setEditingMenuId(null);
+      })
+      .catch((err) => console.error("Menü mentési hiba:", err));
   };
 
   const getRowTotal = (etel) =>
@@ -99,12 +139,52 @@ const canEdit = (etel) => {
                 {menu && (
                   <tr style={{ backgroundColor: "#f0f0f0", fontWeight: "bold" }}>
                     <td>{datum}</td>
-                    <td>{menu.foetel_A}</td>
-                    <td>{menu.foetel_B}</td>
-                    <td>{menu.foetel_C}</td>
-                    <td>{menu.leves}</td>
+                    <td>
+                      {editingMenuId === menu.id ? (
+                        <input
+                          type="text"
+                          value={editedMenuData[menu.id]?.foetel_A || ""}
+                          onChange={(e) => handleMenuChange(menu.id, "foetel_A", e.target.value)}
+                        />
+                      ) : menu.foetel_A}
+                    </td>
+                    <td>
+                      {editingMenuId === menu.id ? (
+                        <input
+                          type="text"
+                          value={editedMenuData[menu.id]?.foetel_B || ""}
+                          onChange={(e) => handleMenuChange(menu.id, "foetel_B", e.target.value)}
+                        />
+                      ) : menu.foetel_B}
+                    </td>
+                    <td>
+                      {editingMenuId === menu.id ? (
+                        <input
+                          type="text"
+                          value={editedMenuData[menu.id]?.foetel_C || ""}
+                          onChange={(e) => handleMenuChange(menu.id, "foetel_C", e.target.value)}
+                        />
+                      ) : menu.foetel_C}
+                    </td>
+                    <td>
+                      {editingMenuId === menu.id ? (
+                        <input
+                          type="text"
+                          value={editedMenuData[menu.id]?.leves || ""}
+                          onChange={(e) => handleMenuChange(menu.id, "leves", e.target.value)}
+                        />
+                      ) : menu.leves}
+                    </td>
                     <td></td>
-                    <td></td>
+                    <td>
+                      {isAdmin() && (
+                        editingMenuId === menu.id ? (
+                          <button onClick={() => handleSaveMenu(menu)}>Mentés</button>
+                        ) : (
+                          <button onClick={() => handleEditMenu(menu)}>Szerkesztés</button>
+                        )
+                      )}
+                    </td>
                   </tr>
                 )}
 
@@ -138,9 +218,7 @@ const canEdit = (etel) => {
                         />
                       ) : etel.adag_C}
                     </td>
-                    <td>
-                      
-                    </td>
+                    <td></td>
                     <td>{getRowTotal(etel)}</td>
                     <td>
                       {canEdit(etel) && (
@@ -150,26 +228,25 @@ const canEdit = (etel) => {
                           <button onClick={() => handleEdit(etel)}>Szerkesztés</button>
                         )
                       )}
-
                     </td>
                   </tr>
                 ))}
-                {/* Összesítő sor a nap végén */}
-            <tr style={{ backgroundColor: "#fff176", fontWeight: "bold" }}>
-              <td>{datum + " összesítés"}</td>
-              <td>{napiEtelek.reduce((sum, e) => sum + (e.adag_A || 0), 0)}</td>
-              <td>{napiEtelek.reduce((sum, e) => sum + (e.adag_B || 0), 0)}</td>
-              <td>{napiEtelek.reduce((sum, e) => sum + (e.adag_C || 0), 0)}</td>
-              <td></td>
-              <td>
-                {napiEtelek.reduce(
-                  (sum, e) => sum + (e.adag_A || 0) + (e.adag_B || 0) + (e.adag_C || 0),
-                  0
-                )}
-              </td>
-              <td></td>
-            </tr>
 
+                {/* Összesítő sor */}
+                <tr style={{ backgroundColor: "#fff176", fontWeight: "bold" }}>
+                  <td>{datum + " összesítés"}</td>
+                  <td>{napiEtelek.reduce((sum, e) => sum + (Number(e.adag_A) || 0), 0)}</td>
+                  <td>{napiEtelek.reduce((sum, e) => sum + (Number(e.adag_B) || 0), 0)}</td>
+                  <td>{napiEtelek.reduce((sum, e) => sum + (Number(e.adag_C) || 0), 0)}</td>
+                  <td></td>
+                  <td>
+                    {napiEtelek.reduce(
+                      (sum, e) => sum + (Number(e.adag_A) || 0) + (Number(e.adag_B) || 0) + (Number(e.adag_C) || 0),
+                      0
+                    )}
+                  </td>
+                  <td></td>
+                </tr>
               </React.Fragment>
             );
           })}
