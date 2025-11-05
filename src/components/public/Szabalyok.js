@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { myAxios } from '../contexts/MyAxios';
+
 import { Button, Modal, Form } from 'react-bootstrap';
+import { myAxios } from '../../contexts/MyAxios';
 
 export default function Szabalyok() {
   const [szabalyok, setSzabalyok] = useState(null);

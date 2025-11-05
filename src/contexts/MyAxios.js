@@ -11,13 +11,21 @@ export const myAxios = axios.create({
 
 myAxios.interceptors.request.use(
   (config) => {
-    const token = document.cookie
+    // SANCTUM BEARER TOKEN - EZ A FONTOS!
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    // CSRF token
+    const csrfToken = document.cookie
       .split("; ")
       .find((row) => row.startsWith("XSRF-TOKEN="))
       ?.split("=")[1];
-    if (token) {
-      config.headers["X-XSRF-TOKEN"] = decodeURIComponent(token);
+    if (csrfToken) {
+      config.headers["X-XSRF-TOKEN"] = decodeURIComponent(csrfToken);
     }
+    
     return config;
   },
   (error) => {

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { myAxios } from "../contexts/MyAxios";
+import { myAxios } from "../../contexts/MyAxios";
 import "./Adatok.css";
 import { Button, Modal } from "react-bootstrap";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Adatok = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

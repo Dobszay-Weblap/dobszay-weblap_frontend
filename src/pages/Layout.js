@@ -3,17 +3,18 @@ import { Link, Routes, Route, useLocation, useNavigate } from "react-router-dom"
 import { Nav, NavDropdown, Modal, Button } from "react-bootstrap";
 import "./Layout.css";
 import { useAuth } from "../contexts/AuthContext";
-import KorabbiEv from "../components/Korabbiev";
-import Adatok from "../components/Adatok";
-import Hazak from "../components/Hazak";
-import Etelek from "../components/Rendeles";
-import Ajanlatok from "../components/Ajanlatok";
+import KorabbiEv from "../components/public/Korabbiev";
+import Adatok from "../components/public/Adatok";
+import Hazak from "../components/public/Hazak";
+import Etelek from "../components/public/Rendeles";
+import Ajanlatok from "../components/public/Ajanlatok";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 import { myAxios } from "../contexts/MyAxios";
 import PasswordChangeFirst from "./PasswordChangeFirst";
-import Szabalyok from "../components/Szabalyok";
-import EtelekOsszesito from "../components/EtelekOsszesito";
+import Szabalyok from "../components/public/Szabalyok";
+import EtelekOsszesito from "../components/public/EtelekOsszesito";
+import Felhasznalok from "../components/admin/Felhasznalok";
 
 
 const Layout = () => {
@@ -145,13 +146,21 @@ const Layout = () => {
                 )}
               </>
             )}
-{user?.jogosultsagi_szint === "nezo" && (
-            <Nav.Item>
-                  <Link to="/etelosszesito" className="nav-link" >
-                    Étel
-                  </Link>
-                </Nav.Item>
-)}
+            {(user?.jogosultsagi_szint === "nezo" || user?.jogosultsagi_szint === "admin") && (
+              <Nav.Item>
+                <Link to="/etelosszesito" className="nav-link" >
+                  Összesítő
+                </Link>
+              </Nav.Item>
+            )}
+
+        { user?.jogosultsagi_szint === "admin" && (
+                    <Nav.Item>
+                          <Link to="/felhasznalok" className="nav-link" >
+                            Felhasználók
+                          </Link>
+                        </Nav.Item>
+        )}
           </Nav>
         </div>
 
@@ -189,6 +198,7 @@ const Layout = () => {
             <Route path="/szabalyok" element={<Szabalyok />} />
             <Route path="/elfelejtett-jelszo" element={<ForgotPassword />} />
             <Route path="/password-reset" element={<ResetPassword />} />
+            <Route path="/felhasznalok" element={<Felhasznalok />} />
                     
             {/* További route-ok ide kerülhetnek */}
           </Routes>
