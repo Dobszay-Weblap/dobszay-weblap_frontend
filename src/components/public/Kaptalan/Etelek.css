@@ -1,15 +1,17 @@
 .etel-table-container {
   width: 100%;
   overflow-x: auto;
-  margin: 20px auto;
   text-align: center;
+  background-color: #884d4d;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
 
 .etel-table {
   width: 100%;
-  border-collapse: collapse;
   font-family: Arial, sans-serif;
   font-size: 12px;
+  background-color: aqua;
 }
 
 .etel-table th,
@@ -21,12 +23,13 @@
 }
 
 .etel-table th {
-  background-color: #f4f4f4;
+  background-color: #f38383;
   font-weight: bold;
 }
 
+
 .etel-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #e79696;
 }
 
 .etel-table td:first-child {
@@ -38,7 +41,7 @@
 }
 
 .etel-table .osszesito {
-  background-color: yellow !important;
+  background-color: rgb(66, 61, 116) !important;
 }
 
 .etel-table .input2 {
@@ -49,14 +52,12 @@
 
 .etel-table .button {
   margin-right: 5px;
+  
 }
 
 .etel-table .adatok {
   text-align: center;
-}
-
-.etel-table .megjegyzes {
-  background-color: aqua;
+  
 }
 
 .etel-table input::-webkit-outer-spin-button,
@@ -68,23 +69,8 @@
   padding: 5px 10px;
   margin: 5px;
   cursor: pointer;
+  background-color: rgb(61, 116, 81) !important;
 }
-
-
-
-
-.datum-beallitas {
-  margin-bottom: 20px;
-  background: #f4f4f4;
-  padding: 15px;
-  border-radius: 8px;
-  max-width: 400px;
-  margin: auto;
-}
-.datum-beallitas input {
-  margin-right: 10px;
-}
-
 
 @media screen and (max-width: 600px) {
   .etel-table {

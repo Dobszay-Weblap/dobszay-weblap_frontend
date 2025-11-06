@@ -41,7 +41,7 @@ const login = async ({ email, password }) => {
 
     setUser(userWithGroups);
     setIsLoggedIn(true);
-    localStorage.setItem("access_token", token);
+    localStorage.setItem('auth_token', token);
     myAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
     return userWithGroups;
@@ -63,14 +63,14 @@ const login = async ({ email, password }) => {
     } finally {
       setUser(null);
       setIsLoggedIn(false);
-      localStorage.removeItem("access_token");
+      localStorage.removeItem('auth_token');
       navigate("/");
     }
   };
 
   // Felhasználó lekérése token alapján
   const getUserData = async () => {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem('auth_token');
     if (!token) return;
 
     try {
@@ -104,7 +104,7 @@ const login = async ({ email, password }) => {
 
   // Automatikus bejelentkeztetés ha van token
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem('auth_token');
     if (token) {
       getUserData();
     } else {

@@ -46,26 +46,18 @@ h1{
   }
   
   .elsonezet{
-    background-color: antiquewhite;
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
     padding:15px;
   }
   
   .navok{
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
-    padding: 5px;    
+    padding: 5px;  
+    background-color: lightskyblue;  
   }
   
  
-  .keret{
-    padding: 5px;
-    background-color: rgb(249, 203, 142);
-    border-top-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
+
   
 
   .resetpasswordpage {

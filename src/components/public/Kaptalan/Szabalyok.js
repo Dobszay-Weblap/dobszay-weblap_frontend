@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-
+import "./Szabolyok.css";
 import { Button, Modal, Form } from 'react-bootstrap';
-import { myAxios } from '../../contexts/MyAxios';
+import { myAxios } from '../../../contexts/MyAxios';
 
 export default function Szabalyok() {
   const [szabalyok, setSzabalyok] = useState(null);
@@ -35,18 +35,18 @@ export default function Szabalyok() {
   if (!szabalyok) return <p>Betöltés...</p>;
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2>Információk</h2>
-      <p><strong>Felső cím:</strong> {szabalyok.felso_cim}</p>
-      <p><strong>Alsó cím:</strong> {szabalyok.also_cim}</p>
-      <p><strong>Gondnok:</strong> {szabalyok.gondnok_nev}  ???</p>
-      <p><strong>Wifi:</strong> {szabalyok.wifi_nev} (jelszó: {szabalyok.wifi_jelszo})</p>
+    <div style={{ padding: '2rem',backgroundColor:'lightsalmon', borderRadius:'15px'}}>
+      <h2 className='info'>Információk</h2>
+      <p className='cim'><strong >Felső cím:</strong> {szabalyok.felso_cim}</p>
+      <p className='cim'><strong>Alsó cím:</strong> {szabalyok.also_cim}</p>
+      <p className='cim'><strong>Gondnok:</strong> {szabalyok.gondnok_nev}  ???</p>
+      <p className='cim'><strong>Wifi:</strong> {szabalyok.wifi_nev} (jelszó: {szabalyok.wifi_jelszo})</p>
 
-      <h3 style={{ marginTop: '2rem' }}>Csendes pihenő</h3>
-      <p style={{ whiteSpace: 'pre-line' }}>{szabalyok.csendes_piheno}</p>
+      <h3 className='info'style={{ marginTop: '2rem' }}>Csendes pihenő</h3>
+      <p className='cim' style={{ whiteSpace: 'pre-line' }}>{szabalyok.csendes_piheno}</p>
 
-      <h3 style={{ marginTop: '1.5rem' }}>Malacszolgálat</h3>
-      <p style={{ whiteSpace: 'pre-line' }}>{szabalyok.malacszolgalat}</p>
+      <h3 className='info' style={{ marginTop: '1.5rem' }}>Malacszolgálat</h3>
+      <p className='cim' style={{ whiteSpace: 'pre-line' }}>{szabalyok.malacszolgalat}</p>
 
       <div style={{ marginTop: "2rem" }}>
         <Button variant="warning" onClick={() => setShowModal(true)}>Szerkesztés</Button>

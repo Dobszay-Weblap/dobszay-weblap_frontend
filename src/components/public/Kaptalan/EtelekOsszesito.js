@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { myAxios } from "../../contexts/MyAxios";
+import { myAxios } from "../../../contexts/MyAxios";
+import "./Etelek.css";
 
 const EtelekOsszesito = () => {
   const [menuk, setMenuk] = useState([]);
@@ -44,25 +45,6 @@ const EtelekOsszesito = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Heti összesítés
-  const getHetiOsszesites = () => {
-    const osszes = {
-      A: 0,
-      B: 0,
-      C: 0,
-      osszes: 0
-    };
-
-    etelek.forEach(etel => {
-      osszes.A += Number(etel.adag_A) || 0;
-      osszes.B += Number(etel.adag_B) || 0;
-      osszes.C += Number(etel.adag_C) || 0;
-    });
-
-    osszes.osszes = osszes.A + osszes.B + osszes.C;
-    return osszes;
-  };
-
   // Napi összesítés
   const getNapiOsszesites = () => {
     return datumok.map(datum => {
@@ -106,7 +88,6 @@ const EtelekOsszesito = () => {
       .sort((a, b) => b.osszes - a.osszes);
   };
 
-  const hetiOsszesites = getHetiOsszesites();
   const napiOsszesites = getNapiOsszesites();
   const csoportOsszesites = getCsoportOsszesites();
 
@@ -115,7 +96,7 @@ const EtelekOsszesito = () => {
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto' }}>
+    <div style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto', backgroundColor:'lightblue', borderBottomLeftRadius:'15px', borderBottomRightRadius:'15px'}}>
       <h2 style={{ marginBottom: '30px', fontSize:'50px', fontWeight:'bolder' }}>Ételek Összesítő</h2>
 
       {/* Napi összesítés */}

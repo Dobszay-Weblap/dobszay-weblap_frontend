@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Etelek.css";
-import { myAxios } from "../../contexts/MyAxios";
-import { useAuth } from "../../contexts/AuthContext";
+import { myAxios } from "../../../contexts/MyAxios";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const Etelek = () => {
   const [menuk, setMenuk] = useState([]);
@@ -178,7 +178,7 @@ const Etelek = () => {
     <div className="etel-table-container">
       <h2>Étkezési táblázat</h2>      
       {isAdmin() && (
-        <div style={{ marginBottom: "20px", padding: "15px", borderRadius: "8px", backgroundColor: "#f9f9f9" }}>
+        <div style={{ marginBottom: "20px", padding: "15px", backgroundColor: "#f9f9f9" }}>
           <h3>Hét kezdő dátumának beállítása</h3>
           <p><strong>Aktuális kezdő dátum:</strong> {kezdoDatum || "nincs beállítva"}</p>
           <div style={{ marginTop: "10px" }}>
@@ -219,7 +219,7 @@ const Etelek = () => {
             return (
               <React.Fragment key={datum}>
                 {menu && (
-                  <tr style={{ backgroundColor: "#f0f0f0", fontWeight: "bold" }}>
+                  <tr style={{ backgroundColor: "#ebc182ff", fontWeight: "bold" }}>
                     <td>{datum}</td>
                     
                     {/* Dinamikus menü oszlopok */}
@@ -368,7 +368,7 @@ const Etelek = () => {
                 ))}
 
                 {/* Összesítő sor */}
-                <tr style={{ backgroundColor: "#fff176", fontWeight: "bold" }}>
+                <tr style={{ backgroundColor: "#76ff86ff", fontWeight: "bold" }}>
                   <td>{datum + " összesítés"}</td>
                   
                   {activeItems.length === 0 ? (

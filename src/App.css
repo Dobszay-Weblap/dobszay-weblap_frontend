@@ -6,6 +6,7 @@ html, body {
 
 .App {
   text-align: center;
+  background-color: rgb(136, 255, 0);
 }
 
 .App-header {
@@ -13,6 +14,6 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color:red;
+
 }
 

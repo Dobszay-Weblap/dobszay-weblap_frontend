@@ -5,16 +5,17 @@ import "./Layout.css";
 import { useAuth } from "../contexts/AuthContext";
 import KorabbiEv from "../components/public/Korabbiev";
 import Adatok from "../components/public/Adatok";
-import Hazak from "../components/public/Hazak";
-import Etelek from "../components/public/Rendeles";
+import Hazak from "../components/public/Kaptalan/Hazak";
+import Etelek from "../components/public/Kaptalan/Rendeles";
 import Ajanlatok from "../components/public/Ajanlatok";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 import { myAxios } from "../contexts/MyAxios";
 import PasswordChangeFirst from "./PasswordChangeFirst";
-import Szabalyok from "../components/public/Szabalyok";
-import EtelekOsszesito from "../components/public/EtelekOsszesito";
+import Szabalyok from "../components/public/Kaptalan/Szabalyok";
+import EtelekOsszesito from "../components/public/Kaptalan/EtelekOsszesito";
 import Felhasznalok from "../components/admin/Felhasznalok";
+import Csolimpia from "../components/public/Kaptalan/Csolimpia";
 
 
 const Layout = () => {
@@ -199,6 +200,7 @@ const Layout = () => {
             <Route path="/elfelejtett-jelszo" element={<ForgotPassword />} />
             <Route path="/password-reset" element={<ResetPassword />} />
             <Route path="/felhasznalok" element={<Felhasznalok />} />
+            <Route path="/csolimpia" element={<Csolimpia />} />
                     
             {/* További route-ok ide kerülhetnek */}
           </Routes>

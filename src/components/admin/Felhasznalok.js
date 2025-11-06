@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Form, Badge, Modal, Table, Spinner, Alert } from 'react-bootstrap';
 import { myAxios } from '../../contexts/MyAxios';
+import "./Felhasznalok.css";
 
 export default function Felhasznalok() {
-  const [user, setUser] = useState([]);
+  const [users, setUsers] = useState([]);
   const [csoportok, setCsoportok] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingUser, setEditingUser] = useState(null);
+  const [editingEmail, setEditingEmail] = useState(null);
+  const [editEmailValue, setEditEmailValue] = useState('');
   const [error, setError] = useState(null);
   const [showNewUserModal, setShowNewUserModal] = useState(false);
   const [showNewCsoportModal, setShowNewCsoportModal] = useState(false);
@@ -15,13 +18,13 @@ export default function Felhasznalok() {
     name: '',
     email: '',
     password: 'Jelszo123',
-    csoportok: []
+    csoport_id: null
   });
 
   const fetchUsers = async () => {
     try {
       const response = await myAxios.get('/api/admin/users');
-      setUser(response.data);
+      setUsers(response.data);
       setLoading(false);
     } catch (error) {
       console.error('Hiba a felhasználók betöltésekor:', error);
@@ -40,6 +43,15 @@ export default function Felhasznalok() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('auth_token');
+    //console.log('🔑 Token:', token ? 'Van ✅' : 'NINCS ❌');
+    
+    if (!token) {
+      setError('Nincs bejelentkezési token! Kérlek jelentkezz be.');
+      setLoading(false);
+      return;
+    }
+    
     fetchUsers();
     fetchCsoportok();
   }, []);
@@ -51,9 +63,9 @@ export default function Felhasznalok() {
       if (response.status === 201) {
         const createdUser = response.data;
         
-        if (newUser.csoportok.length > 0) {
+        if (newUser.csoport_id) {
           await myAxios.put(`/api/users/${createdUser.id}/csoportok`, {
-            csoportok: newUser.csoportok
+            csoportok: [newUser.csoport_id]
           });
         }
 
@@ -62,7 +74,7 @@ export default function Felhasznalok() {
           name: '',
           email: '',
           password: 'Jelszo123',
-          csoportok: []
+          csoport_id: null
         });
         fetchUsers();
       }
@@ -73,6 +85,8 @@ export default function Felhasznalok() {
   };
 
   const handleCreateCsoport = async () => {
+    if (!newCsoportNev.trim()) return;
+    
     try {
       const response = await myAxios.post('/api/csoportok', {
         nev: newCsoportNev
@@ -90,43 +104,57 @@ export default function Felhasznalok() {
     }
   };
 
-  const handleUpdateCsoportok = async (userId, csoportIds) => {
+  const handleUpdateCsoport = async (userId, csoportId) => {
     try {
+      // Először frissítjük az emailt, ha változott
+      const user = users.find(u => u.id === userId);
+      if (editEmailValue && editEmailValue !== user.email) {
+        await myAxios.put(`/api/users/${userId}`, {
+          email: editEmailValue
+        });
+      }
+      
+      // Aztán a csoportot
       await myAxios.put(`/api/users/${userId}/csoportok`, {
-        csoportok: csoportIds
+        csoportok: csoportId ? [csoportId] : []
       });
       
       fetchUsers();
       setEditingUser(null);
+      setEditingEmail(null);
+      setEditEmailValue('');
     } catch (error) {
-      console.error('Hiba a csoportok frissítésekor:', error);
-      setError('Nem sikerült frissíteni a csoportokat.');
+      console.error('Hiba a frissítéskor:', error);
+      setError('Nem sikerült frissíteni az adatokat.');
     }
   };
 
-  const toggleCsoportForUser = (userId, csoportId) => {
-    setUser(user.map(user => {
+  const handleUpdateEmail = async (userId) => {
+    try {
+      await myAxios.put(`/api/users/${userId}`, {
+        email: editEmailValue
+      });
+      
+      fetchUsers();
+      setEditingEmail(null);
+      setEditEmailValue('');
+      setError(null);
+    } catch (error) {
+      console.error('Hiba az email frissítésekor:', error);
+      setError('Nem sikerült frissíteni az email címet. Lehet, hogy már használatban van.');
+    }
+  };
+
+  const selectCsoportForUser = (userId, csoportId) => {
+    setUsers(users.map(user => {
       if (user.id === userId) {
-        const currentCsoportIds = user.csoportok.map(c => c.id);
-        const newCsoportIds = currentCsoportIds.includes(csoportId)
-          ? currentCsoportIds.filter(id => id !== csoportId)
-          : [...currentCsoportIds, csoportId];
-        
+        const selectedCsoport = csoportok.find(c => c.id === csoportId);
         return {
           ...user,
-          csoportok: csoportok.filter(c => newCsoportIds.includes(c.id))
+          csoportok: selectedCsoport ? [selectedCsoport] : []
         };
       }
       return user;
-    }));
-  };
-
-  const toggleCsoportForNewUser = (csoportId) => {
-    setNewUser(prev => ({
-      ...prev,
-      csoportok: prev.csoportok.includes(csoportId)
-        ? prev.csoportok.filter(id => id !== csoportId)
-        : [...prev.csoportok, csoportId]
     }));
   };
 
@@ -147,7 +175,7 @@ export default function Felhasznalok() {
               <Row className="align-items-center">
                 <Col>
                   <h1 className="mb-1">👥 Felhasználók kezelése</h1>
-                  <p className="text-muted mb-0">Összesen {user.length} felhasználó • {csoportok.length} csoport</p>
+                  <p className="text-muted mb-0">Összesen {users.length} felhasználó • {csoportok.length} csoport</p>
                 </Col>
                 <Col xs="auto">
                   <Button variant="outline-primary" className="me-2" onClick={() => setShowNewCsoportModal(true)}>
@@ -184,8 +212,15 @@ export default function Felhasznalok() {
               <Form.Label>Csoport neve</Form.Label>
               <Form.Control
                 type="text"
+                placeholder="pl. Családnév"
                 value={newCsoportNev}
                 onChange={(e) => setNewCsoportNev(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleCreateCsoport();
+                  }
+                }}
                 autoFocus
               />
             </Form.Group>
@@ -242,19 +277,18 @@ export default function Felhasznalok() {
             </Alert>
 
             <Form.Group className="mb-3">
-              <Form.Label>Csoportok</Form.Label>
-              <div className="d-flex flex-wrap gap-2">
+              <Form.Label>Csoport</Form.Label>
+              <Form.Select 
+                value={newUser.csoport_id || ''} 
+                onChange={(e) => setNewUser({...newUser, csoport_id: e.target.value ? parseInt(e.target.value) : null})}
+              >
+                <option value="">Nincs csoport</option>
                 {csoportok.map(csoport => (
-                  <Button
-                    key={csoport.id}
-                    variant={newUser.csoportok.includes(csoport.id) ? 'primary' : 'outline-secondary'}
-                    size="sm"
-                    onClick={() => toggleCsoportForNewUser(csoport.id)}
-                  >
+                  <option key={csoport.id} value={csoport.id}>
                     {csoport.nev}
-                  </Button>
+                  </option>
                 ))}
-              </div>
+              </Form.Select>
             </Form.Group>
           </Form>
         </Modal.Body>
@@ -283,18 +317,47 @@ export default function Felhasznalok() {
                     <th>Név</th>
                     <th>Email</th>
                     <th>Jogosultság</th>
-                    <th>Csoportok</th>
+                    <th className="text-center">Csoport</th>
                     <th className="text-center">Műveletek</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {user.map(user => (
+                  {users.map(user => (
                     <tr key={user.id}>
                       <td>
-                        <strong>👤 {user.name}</strong>
+                        <strong>{user.name}</strong>
                       </td>
                       <td>
-                        {user.email}
+                        {editingEmail === user.id ? (
+                          <div className="d-flex gap-2">
+                            <Form.Control
+                              type="email"
+                              size="sm"
+                              value={editEmailValue}
+                              onChange={(e) => setEditEmailValue(e.target.value)}
+                              autoFocus
+                            />
+                            <Button
+                              variant="success"
+                              size="sm"
+                              onClick={() => handleUpdateEmail(user.id)}
+                            >
+                              ✓
+                            </Button>
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => {
+                                setEditingEmail(null);
+                                setEditEmailValue('');
+                              }}
+                            >
+                              ✕
+                            </Button>
+                          </div>
+                        ) : (
+                          <span>{user.email}</span>
+                        )}
                       </td>
                       <td>
                         <Badge 
@@ -307,30 +370,28 @@ export default function Felhasznalok() {
                           {user.jogosultsagi_szint}
                         </Badge>
                       </td>
-                      <td>
+                      <td className="text-center">
                         {editingUser === user.id ? (
-                          <div className="d-flex flex-wrap gap-2">
+                          <Form.Select 
+                            size="sm"
+                            value={user.csoportok && user.csoportok.length > 0 ? user.csoportok[0].id : ''}
+                            onChange={(e) => selectCsoportForUser(user.id, e.target.value ? parseInt(e.target.value) : null)}
+                          >
+                            <option value="">Nincs csoport</option>
                             {csoportok.map(csoport => (
-                              <Button
-                                key={csoport.id}
-                                variant={user.csoportok.some(c => c.id === csoport.id) ? 'primary' : 'outline-secondary'}
-                                size="sm"
-                                onClick={() => toggleCsoportForUser(user.id, csoport.id)}
-                              >
+                              <option key={csoport.id} value={csoport.id}>
                                 {csoport.nev}
-                              </Button>
+                              </option>
                             ))}
-                          </div>
+                          </Form.Select>
                         ) : (
-                          <div className="d-flex flex-wrap gap-1">
+                          <div>
                             {user.csoportok && user.csoportok.length > 0 ? (
-                              user.csoportok.map(csoport => (
-                                <Badge key={csoport.id} bg="primary" className="me-1">
-                                  {csoport.nev}
-                                </Badge>
-                              ))
+                              <Badge bg="primary">
+                                {user.csoportok[0].nev}
+                              </Badge>
                             ) : (
-                              <span className="text-muted fst-italic">Nincs csoporthoz rendelve</span>
+                              <span className="text-muted fst-italic">Nincs csoport</span>
                             )}
                           </div>
                         )}
@@ -342,8 +403,10 @@ export default function Felhasznalok() {
                               variant="success"
                               size="sm"
                               onClick={() => {
-                                const csoportIds = user.csoportok.map(c => c.id);
-                                handleUpdateCsoportok(user.id, csoportIds);
+                                const csoportId = user.csoportok && user.csoportok.length > 0 
+                                  ? user.csoportok[0].id 
+                                  : null;
+                                handleUpdateCsoport(user.id, csoportId);
                               }}
                             >
                               ✅ Mentés
@@ -353,6 +416,8 @@ export default function Felhasznalok() {
                               size="sm"
                               onClick={() => {
                                 setEditingUser(null);
+                                setEditingEmail(null);
+                                setEditEmailValue('');
                                 fetchUsers();
                               }}
                             >
@@ -363,9 +428,13 @@ export default function Felhasznalok() {
                           <Button
                             variant="outline-primary"
                             size="sm"
-                            onClick={() => setEditingUser(user.id)}
+                            onClick={() => {
+                              setEditingUser(user.id);
+                              setEditingEmail(user.id);
+                              setEditEmailValue(user.email);
+                            }}
                           >
-                            ✏️ Csoportok szerkesztése
+                            ✏️ Szerkesztés
                           </Button>
                         )}
                       </td>
@@ -374,7 +443,7 @@ export default function Felhasznalok() {
                 </tbody>
               </Table>
 
-              {user.length === 0 && (
+              {users.length === 0 && (
                 <div className="text-center py-5">
                   <h3 className="text-muted mb-3">👥</h3>
                   <p className="text-muted">Még nincsenek felhasználók</p>

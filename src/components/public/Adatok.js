@@ -2,16 +2,14 @@ import React, { useState, useEffect } from "react";
 import { myAxios } from "../../contexts/MyAxios";
 import "./Adatok.css";
 import { Button, Modal } from "react-bootstrap";
-import { useAuth } from "../../contexts/AuthContext";
 
 const Adatok = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-   const { user} = useAuth();
-   const [szerkesztesMod, setSzerkesztesMod] = useState(false);
-    const [aktualisSzemely, setAktualisSzemely] = useState(null);
+  const [szerkesztesMod, setSzerkesztesMod] = useState(false);
+  const [aktualisSzemely, setAktualisSzemely] = useState(null);
 
 
-   function hierarchikusRendez(adatok) {
+  function hierarchikusRendez(adatok) {
   const kodMap = new Map();
   adatok.forEach((item) => kodMap.set(String(item.matebazsi_kod), item));
 
@@ -159,7 +157,7 @@ const rendezettAdatok = hierarchikusRendez(adatok);
   return (
     <div className="adatok">
       <h2>Családi Adatok</h2>
-      <Button variant="primary" onClick={() => {
+      <Button variant="primary" className="adatok-button" onClick={() => {
         setUjCsaladtag({
           nev: "", mobil_telefonszam: "", vonalas_telefon: "", cim: "",
           szuletesi_ev: "", szulinap: "", nevnap: "", email: "", skype: "",
@@ -171,7 +169,7 @@ const rendezettAdatok = hierarchikusRendez(adatok);
         setIsModalOpen(true);
       }}>Új családtag hozzáadása</Button>
 
-      <Button variant="primary" onClick={() => setSzerkesztesMod(true)}>Szerkesztés</Button>
+      <Button variant="primary" className="adatok-button" onClick={() => setSzerkesztesMod(true)}>Szerkesztés</Button>
       <Modal show={isModalOpen} onHide={handleModalClose}>
         <Modal.Header closeButton>
           <Modal.Title>{szerkesztesMod ? "Családtag szerkesztése" : "Új családtag hozzáadása"}</Modal.Title>
