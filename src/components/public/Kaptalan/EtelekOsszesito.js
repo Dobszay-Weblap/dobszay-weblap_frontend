@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { myAxios } from "../../../contexts/MyAxios";
 import "./Etelek.css";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const EtelekOsszesito = () => {
   const [menuk, setMenuk] = useState([]);
   const [etelek, setEtelek] = useState([]);
   const [kezdoDatum, setKezdoDatum] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+
+const isAdmin = () => {
+    return user?.jogosultsagi_szint === "admin";
+  };
 
   // Generálunk 7 napot a kezdő dátumból
   const datumok = kezdoDatum
@@ -96,7 +102,7 @@ const EtelekOsszesito = () => {
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto', backgroundColor:'lightblue', borderBottomLeftRadius:'15px', borderBottomRightRadius:'15px'}}>
+    <div style={{ padding: '20px', margin: '0 auto', backgroundColor:'lightblue', borderBottomLeftRadius:'15px', borderBottomRightRadius:'15px'}}>
       <h2 style={{ marginBottom: '30px', fontSize:'50px', fontWeight:'bolder' }}>Ételek Összesítő</h2>
 
       {/* Napi összesítés */}
@@ -136,8 +142,8 @@ const EtelekOsszesito = () => {
         </table>
       </div>
 
-      {/* Csoport szerinti összesítés */}
-      <div>
+      {isAdmin() && (      
+      <>
         <h3>Összesítés Név szerint</h3>
         <table style={{ 
           width: '100%', 
@@ -171,7 +177,8 @@ const EtelekOsszesito = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </>
+      )}
     </div>
   );
 };

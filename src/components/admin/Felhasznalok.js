@@ -18,8 +18,34 @@ export default function Felhasznalok() {
     name: '',
     email: '',
     password: 'Jelszo123',
-    csoport_id: null
+    csoport_id: null,
+    password_changed: false
   });
+  
+  // Csoportosított felhasználók listája (ABC rendezés nélkül)
+  const getSortedUsers = () => {
+    return [...users].sort((a, b) => {
+      const aGroup = a.csoportok && a.csoportok.length > 0 ? a.csoportok[0].id : null;
+      const bGroup = b.csoportok && b.csoportok.length > 0 ? b.csoportok[0].id : null;
+      
+      // Csoport nélküliek a végére
+      if (aGroup === null && bGroup !== null) return 1;
+      if (aGroup !== null && bGroup === null) return -1;
+      
+      // Ha mindkettő csoport nélküli, tartsd meg az eredeti sorrendet
+      if (aGroup === null && bGroup === null) {
+        return a.id - b.id;
+      }
+      
+      // Ha ugyanabban a csoportban vannak, tartsd meg az eredeti sorrendet (id szerint)
+      if (aGroup === bGroup) {
+        return a.id - b.id;
+      }
+      
+      // Különböző csoportok esetén: tartsd meg a csoportok eredeti sorrendjét
+      return aGroup - bGroup;
+    });
+  };
 
   const fetchUsers = async () => {
     try {
@@ -44,7 +70,6 @@ export default function Felhasznalok() {
 
   useEffect(() => {
     const token = localStorage.getItem('auth_token');
-    //console.log('🔑 Token:', token ? 'Van ✅' : 'NINCS ❌');
     
     if (!token) {
       setError('Nincs bejelentkezési token! Kérlek jelentkezz be.');
@@ -57,32 +82,33 @@ export default function Felhasznalok() {
   }, []);
 
   const handleCreateUser = async () => {
-    try {
-      const response = await myAxios.post('/api/users', newUser);
+  try {
+    const response = await myAxios.post('/api/users', newUser); // ✅ Ez így jó!
 
-      if (response.status === 201) {
-        const createdUser = response.data;
-        
-        if (newUser.csoport_id) {
-          await myAxios.put(`/api/users/${createdUser.id}/csoportok`, {
-            csoportok: [newUser.csoport_id]
-          });
-        }
-
-        setShowNewUserModal(false);
-        setNewUser({
-          name: '',
-          email: '',
-          password: 'Jelszo123',
-          csoport_id: null
+    if (response.status === 201) {
+      const createdUser = response.data;
+      
+      if (newUser.csoport_id) {
+        await myAxios.put(`/api/users/${createdUser.id}/csoportok`, {
+          csoportok: [newUser.csoport_id]
         });
-        fetchUsers();
       }
-    } catch (error) {
-      console.error('Hiba a felhasználó létrehozásakor:', error);
-      setError('Nem sikerült létrehozni a felhasználót.');
+
+      setShowNewUserModal(false);
+      setNewUser({
+        name: '',
+        email: '',
+        password: 'Jelszo123',
+        csoport_id: null,
+        password_changed:false
+      });
+      fetchUsers();
     }
-  };
+  } catch (error) {
+    console.error('Hiba a felhasználó létrehozásakor:', error);
+    setError('Nem sikerült létrehozni a felhasználót.');
+  }
+};
 
   const handleCreateCsoport = async () => {
     if (!newCsoportNev.trim()) return;
@@ -165,6 +191,8 @@ export default function Felhasznalok() {
       </Container>
     );
   }
+
+  const sortedUsers = getSortedUsers();
 
   return (
     <Container fluid className="py-4">
@@ -283,11 +311,13 @@ export default function Felhasznalok() {
                 onChange={(e) => setNewUser({...newUser, csoport_id: e.target.value ? parseInt(e.target.value) : null})}
               >
                 <option value="">Nincs csoport</option>
-                {csoportok.map(csoport => (
-                  <option key={csoport.id} value={csoport.id}>
-                    {csoport.nev}
-                  </option>
-                ))}
+                {csoportok
+                  .filter(csoport => csoport.nev.trim().toLowerCase() !== 'virág étterem')
+                  .map(csoport => (
+                    <option key={csoport.id} value={csoport.id}>
+                      {csoport.nev}
+                    </option>
+                  ))}
               </Form.Select>
             </Form.Group>
           </Form>
@@ -322,7 +352,7 @@ export default function Felhasznalok() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map(user => (
+                  {sortedUsers.map(user => (
                     <tr key={user.id}>
                       <td>
                         <strong>{user.name}</strong>
@@ -378,7 +408,9 @@ export default function Felhasznalok() {
                             onChange={(e) => selectCsoportForUser(user.id, e.target.value ? parseInt(e.target.value) : null)}
                           >
                             <option value="">Nincs csoport</option>
-                            {csoportok.map(csoport => (
+                            {csoportok
+                              .filter(csoport => csoport.nev.trim().toLowerCase() !== 'Virág étterem')
+                              .map(csoport => (
                               <option key={csoport.id} value={csoport.id}>
                                 {csoport.nev}
                               </option>

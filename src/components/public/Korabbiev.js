@@ -10,10 +10,8 @@ const KorabbiEv = () => {
     const [error, setError] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [uploadMessage, setUploadMessage] = useState('');
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [selectedVideo, setSelectedVideo] = useState(null);
 
-    useEffect(() => {
+        useEffect(() => {
         const parsedYear = parseInt(year, 10);
         if (isNaN(parsedYear) || parsedYear <= 0) {
             setError('Érvénytelen év');
@@ -30,20 +28,20 @@ const KorabbiEv = () => {
 
         try {
             const parsedYear = parseInt(year, 10);
-            console.log("Lekért év:", parsedYear);
-            console.log("Teljes URL:", `http://localhost:8000/api/korabbiev/${parsedYear}`);
+            //console.log("Lekért év:", parsedYear);
+            //console.log("Teljes URL:", `http://localhost:8000/api/korabbiev/${parsedYear}`);
             
             const response = await myAxios.get(`http://localhost:8000/api/korabbiev/${parsedYear}`);
             
-            console.log("Válasz adatok:", response.data);
+            //console.log("Válasz adatok:", response.data);
             
             if (response.data.error) {
                 setError(response.data.error);
             } else {
                 setVideos(response.data.videos ?? []);
                 setKepek(response.data.images ?? []);
-                console.log("Betöltött képek:", response.data.images);
-                console.log("Betöltött videók:", response.data.videos);
+                //console.log("Betöltött képek:", response.data.images);
+                //console.log("Betöltött videók:", response.data.videos);
             }
         } catch (err) {
             console.error('Hiba részletei:', err);
@@ -52,6 +50,8 @@ const KorabbiEv = () => {
             setError('Hiba történt az adatok lekérésekor: ' + (err.response?.data?.message || err.message));
         }
     };
+
+
 
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];

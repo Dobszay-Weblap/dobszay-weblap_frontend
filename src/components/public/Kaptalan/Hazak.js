@@ -97,7 +97,7 @@ export default function Hazak() {
   const fetchFoglaltsag = () => {
     myAxios.get("/api/foglaltsag")
       .then((response) => {
-        console.log("API válasz:", response);
+        //console.log("API válasz:", response);
         
         const data = Array.isArray(response) ? response : response.data;
         
@@ -129,7 +129,7 @@ export default function Hazak() {
           };
         });
         
-        console.log("Feldolgozott foglaltság:", szobaMap);
+        //console.log("Feldolgozott foglaltság:", szobaMap);
         setFoglaltsag(szobaMap);
       })
       .catch((err) => {
@@ -147,7 +147,7 @@ export default function Hazak() {
   };
 
   const openModal = (szobaId) => {
-    console.log("Modal megnyitása szobához:", szobaId);
+    //console.log("Modal megnyitása szobához:", szobaId);
     setAktualisSzoba(szobaId);
     setModalOpen(true);
   };
@@ -228,7 +228,7 @@ export default function Hazak() {
       }
     }
 
-    console.log("Lakó hozzáadása szobához:", celSzoba);
+    //console.log("Lakó hozzáadása szobához:", celSzoba);
 
     myAxios.post("/api/foglaltsag/hozzad", {
       szoba: celSzoba,
@@ -239,13 +239,13 @@ export default function Hazak() {
       }
     })
       .then((response) => {
-        console.log("Hozzáadás válasz:", response);
+        //console.log("Hozzáadás válasz:", response);
         
         const data = Array.isArray(response) ? response : response.data;
         
         if (!Array.isArray(data)) {
           console.error("A válasz nem tömb:", data);
-          alert("Sikeres hozzáadás!");
+          //alert("Sikeres hozzáadás!");
           fetchFoglaltsag();
           closeModal();
           return;
@@ -274,7 +274,7 @@ export default function Hazak() {
         });
         
         setFoglaltsag(szobaMap);
-        alert("Sikeresen hozzáadva!");
+        //alert("Sikeresen hozzáadva!");
         setUjLako("");
         closeModal();
       })
@@ -286,7 +286,7 @@ export default function Hazak() {
   };
 
   const handleDeleteAll = () => {
-    if (!window.confirm("Biztosan törölni szeretnéd az összes foglaltságot?")) return;
+    if (!window.confirm("Biztosan törölni szeretnéd az összes lakót?")) return;
 
     const token = localStorage.getItem('auth_token');
 
@@ -300,7 +300,7 @@ export default function Hazak() {
       },
     })
     .then(() => {
-      alert("Minden lakó sikeresen törölve!");
+      //alert("Minden lakó sikeresen törölve!");
       fetchFoglaltsag();
     })
     .catch((err) => {
@@ -313,7 +313,7 @@ export default function Hazak() {
   const handleDeleteLako = (szobaId, lakoNev) => {
     const token = localStorage.getItem('auth_token');
     
-    if (!window.confirm('Biztosan törölni szeretnéd ezt a lakót?')) return;
+    if (!window.confirm('Biztosan törölni szeretnéd?')) return;
 
     // Megkeressük a lakó indexét a szobában
     const szoba = foglaltsag[szobaId];
@@ -328,7 +328,7 @@ export default function Hazak() {
       return;
     }
 
-    console.log('Törlés:', { szobaId, lakoNev, lakoIndex });
+    //console.log('Törlés:', { szobaId, lakoNev, lakoIndex });
 
     // Query parameter használata a slash probléma elkerülésére
     myAxios.delete(`/api/foglaltsag/torol`, {
@@ -339,7 +339,7 @@ export default function Hazak() {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(() => {
-      alert('Törölve!');
+      //alert('Törölve!');
       fetchFoglaltsag();
     })
     .catch(err => {
@@ -471,12 +471,12 @@ export default function Hazak() {
           {[
             { nev: "Emelet 1", id: "Em1" },
             { nev: "Emelet 2", id: "Em2" },
-            { nev: "Emelet 3", id: "E3" },
-            { nev: "Emelet 4", id: "E4" },
-            { nev: "Emelet 5", id: "E5" },
-            { nev: "Emelet 6", id: "E6" },
-            { nev: "Emelet 7", id: "E7" },
-            { nev: "Emelet 8", id: "E8" },
+            { nev: "Emelet 3", id: "Em3" },
+            { nev: "Emelet 4", id: "Em4" },
+            { nev: "Emelet 5", id: "Em5" },
+            { nev: "Emelet 6", id: "Em6" },
+            { nev: "Emelet 7", id: "Em7" },
+            { nev: "Emelet 8", id: "Em8" },
             { nev: "Fszt 8", id: "Fszt8" },
             { nev: "Fszt 7", id: "Fszt7" },
             { nev: "Fszt 6", id: "Fszt6" },

@@ -19,7 +19,7 @@ const login = async ({ email, password }) => {
   try {
     const response = await myAxios.post("/api/login", { email, password }); // ⬅️ /api/login
 
-    console.log("Login response:", response.data);
+    //console.log("Login response:", response.data);
 
     const token = response.data.token || response.data.access_token;
     const userData = response.data.user;
@@ -57,7 +57,7 @@ const login = async ({ email, password }) => {
   const logout = async () => {
     await csrf();
     try {
-      await myAxios.post("/logout");
+      await myAxios.post("/api/logout");
     } catch (error) {
       console.log(error);
     } finally {
@@ -69,38 +69,38 @@ const login = async ({ email, password }) => {
   };
 
   // Felhasználó lekérése token alapján
-  const getUserData = async () => {
-    const token = localStorage.getItem('auth_token');
-    if (!token) return;
+ const getUserData = async () => {
+  const token = localStorage.getItem('auth_token');
+  if (!token) return;
 
-    try {
-      const response = await myAxios.get("api/user", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  try {
+    const response = await myAxios.get("/api/user", {  // ⬅️ / előtag!
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      const userData = response.data;
+    const userData = response.data;
 
-      const normalizedGroups = userData.csoportok?.map((group) => ({
-        id: group.id,
-        nev: group.nev,
-      })) || [];
+    const normalizedGroups = userData.csoportok?.map((group) => ({
+      id: group.id,
+      nev: group.nev,
+    })) || [];
 
-      setUser({
-        ...userData,
-        csoportok: normalizedGroups,
-      });
+    setUser({
+      ...userData,
+      csoportok: normalizedGroups,
+    });
 
-      setIsLoggedIn(true);
-      myAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`; // biztos ami biztos
-    } catch (error) {
-      console.error("Hiba a felhasználói adatok lekérésekor:", error);
-      if (error.response && error.response.status === 401) {
-        logout(); // Token lejárt vagy hibás
-      }
+    setIsLoggedIn(true);
+    myAxios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } catch (error) {
+    console.error("Hiba a felhasználói adatok lekérésekor:", error);
+    if (error.response && error.response.status === 401) {
+      logout();
     }
-  };
+  }
+};
 
   // Automatikus bejelentkeztetés ha van token
   useEffect(() => {

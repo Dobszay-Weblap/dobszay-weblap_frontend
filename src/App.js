@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import Public from "./pages/Public";
 import Layout from "./pages/Layout";
 import Hazak from "./components/public/Kaptalan/Hazak";
 import Adatok from "./components/public/Adatok";
@@ -20,8 +19,6 @@ function App() {
   return (
     <Routes>
       <Route path="/*" element={<Layout />}>
-        <Route index element={<Public />} />
-
         <Route path="hazak" element={<Hazak />} />
         <Route path="adatok" element={<Adatok />} />
         <Route path="etelek" element={<Etelek />} />
