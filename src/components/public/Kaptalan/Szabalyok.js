@@ -53,47 +53,88 @@ export default function Szabalyok() {
       </div>
 
       {/* Szerkesztő Modal */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>Szabály szerkesztése</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
+      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg" centered>
+  <Modal.Header closeButton>
+    <Modal.Title>Szabály szerkesztése</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <Form>
+      <div className="container-fluid">
+        <div className="row g-3">
+          <div className="col-md-6">
             <Form.Group>
               <Form.Label>Felső cím</Form.Label>
               <Form.Control name="felso_cim" value={aktualis?.felso_cim} onChange={handleChange} />
             </Form.Group>
+          </div>
+
+          <div className="col-md-6">
             <Form.Group>
               <Form.Label>Alsó cím</Form.Label>
               <Form.Control name="also_cim" value={aktualis?.also_cim} onChange={handleChange} />
             </Form.Group>
+          </div>
+
+          <div className="col-md-6">
             <Form.Group>
               <Form.Label>Gondnok neve</Form.Label>
               <Form.Control name="gondnok_nev" value={aktualis?.gondnok_nev} onChange={handleChange} />
             </Form.Group>
+          </div>
+
+          <div className="col-md-6">
             <Form.Group>
               <Form.Label>Wifi név</Form.Label>
               <Form.Control name="wifi_nev" value={aktualis?.wifi_nev} onChange={handleChange} />
             </Form.Group>
+          </div>
+
+          <div className="col-md-6">
             <Form.Group>
               <Form.Label>Wifi jelszó</Form.Label>
               <Form.Control name="wifi_jelszo" value={aktualis?.wifi_jelszo} onChange={handleChange} />
             </Form.Group>
+          </div>
+
+          <div className="col-12">
             <Form.Group>
               <Form.Label>Csendes pihenő</Form.Label>
-              <Form.Control as="textarea" rows={3} name="csendes_piheno" value={aktualis?.csendes_piheno} onChange={handleChange} />
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="csendes_piheno"
+                value={aktualis?.csendes_piheno}
+                onChange={handleChange}
+              />
             </Form.Group>
+          </div>
+
+          <div className="col-12">
             <Form.Group>
               <Form.Label>Malacszolgálat</Form.Label>
-              <Form.Control as="textarea" rows={3} name="malacszolgalat" value={aktualis?.malacszolgalat} onChange={handleChange} />
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="malacszolgalat"
+                value={aktualis?.malacszolgalat}
+                onChange={handleChange}
+              />
             </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>Mégse</Button>
-          <Button variant="primary" onClick={handleSubmit}>Mentés</Button>
-        </Modal.Footer>
-      </Modal>
+          </div>
+        </div>
+      </div>
+    </Form>
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowModal(false)}>
+      Mégse
+    </Button>
+    <Button variant="primary" onClick={handleSubmit}>
+      Mentés
+    </Button>
+  </Modal.Footer>
+</Modal>
+
     </div>
   );
 }

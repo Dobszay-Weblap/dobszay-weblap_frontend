@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Container, Table, Button, Form, Card, Alert, Spinner } from 'react-bootstrap';
+import "./Csolimpia.css";
+import { Container, Table, Button, Form, Alert, Spinner } from 'react-bootstrap';
 import { Plus, Pencil, Trash, CheckLg, XLg } from 'react-bootstrap-icons';
 import { myAxios } from '../../../contexts/MyAxios';
 
@@ -8,6 +9,7 @@ const Csolimpia = () => {
   const [versenyszamok, setVersenyszamok] = useState([]);
   const [isEditing, setIsEditing] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
+  const [isEditingSzervezok, setIsEditingSzervezok] = useState(false); // ÚJ
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
   const [szervezok, setSzervezok] = useState({
@@ -24,7 +26,7 @@ const Csolimpia = () => {
       uszas_uszogumi: '',
       sup: '',
     });
-
+  const [szervezokBackup, setSzervezokBackup] = useState({}); // ÚJ - backup a cancel-hez
 
   const [hiba, setHiba] = useState('');
 
@@ -104,23 +106,35 @@ const Csolimpia = () => {
     }
   };
 
-// Új szervező hozzáadása
-const handleSaveSzervezok = async () => {
-  try {
-    const kuldendo = {
-      ...szervezok,
-      sup: String(szervezok.sup || ''), // biztosan string lesz
-    };
+  // Szervezők szerkesztésének kezdése
+  const handleEditSzervezok = () => {
+    setIsEditingSzervezok(true);
+    setSzervezokBackup({ ...szervezok }); // Mentjük az eredeti állapotot
+  };
 
-    //console.log("Küldött adatok:", kuldendo);
+  // Szervezők mentése
+  const handleSaveSzervezok = async () => {
+    try {
+      const kuldendo = {
+        ...szervezok,
+        sup: String(szervezok.sup || ''),
+      };
 
-    await myAxios.post('api/szervezok', kuldendo);
-    //alert('Szervezők elmentve!');
-  } catch (error) {
-    console.error('Szervezők mentése sikertelen:', error);
-    setHiba('Nem sikerült elmenteni a szervezőket.');
-  }
-};
+      await myAxios.post('api/szervezok', kuldendo);
+      setIsEditingSzervezok(false);
+      setSzervezokBackup({});
+    } catch (error) {
+      console.error('Szervezők mentése sikertelen:', error);
+      setHiba('Nem sikerült elmenteni a szervezőket.');
+    }
+  };
+
+  // Szervezők szerkesztésének megszakítása
+  const handleCancelSzervezok = () => {
+    setSzervezok({ ...szervezokBackup }); // Visszaállítjuk az eredeti értékeket
+    setIsEditingSzervezok(false);
+    setSzervezokBackup({});
+  };
 
   // Szerkesztés
   const handleEdit = (item) => {
@@ -170,31 +184,59 @@ const handleSaveSzervezok = async () => {
   }
 
   return (
-    <Container className="my-4">
-      <Card>
-        <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-          <h4 className="mb-0">Versenyszámok 2024/2025</h4>
-          <Button variant="light" onClick={handleAdd}>
-            <Plus className="me-1" /> Új hozzáadása
-          </Button>
-        </Card.Header>
+    <div className="csolimpia-container">
+      <div className="csolimpia-header">
+        <h4>Versenyszámok 2024/2025</h4>
+        <Button variant="light" onClick={handleAdd}>
+          <Plus className="me-1" /> Új hozzáadása
+        </Button>
+      </div>
 
-        <Card.Body className="p-0">
-          <Table bordered hover responsive className=" text-center">
-            <thead className="table-light">
+      <div className="csolimpia-table-wrapper">
+        <Table bordered hover className="csolimpia-table">
+          <thead>
+            <tr>
+              {columns.map(col => (
+                <th key={col.key}>{col.label}</th>
+              ))}
+              <th>Műveletek</th>
+            </tr>
+          </thead>
+          <tbody>
+            {isAdding && (
               <tr>
                 {columns.map(col => (
-                  <th key={col.key}>{col.label}</th>
+                  <td key={col.key}>
+                    {col.key === 'sup' ? (
+                      <Form.Check
+                        type="checkbox"
+                        checked={formData[col.key] || false}
+                        onChange={(e) => handleChange(col.key, e.target.checked)}
+                      />
+                    ) : (
+                      <Form.Control
+                        type="text"
+                        value={formData[col.key] || ''}
+                        onChange={(e) => handleChange(col.key, e.target.value)}
+                      />
+                    )}
+                  </td>
                 ))}
-                <th>Műveletek</th>
+                <td>
+                  <div className="d-flex justify-content-center gap-2">
+                    <Button variant="success" size="sm" onClick={handleSave}><CheckLg /></Button>
+                    <Button variant="secondary" size="sm" onClick={handleCancel}><XLg /></Button>
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {isAdding && (
-                <tr className="s">
-                  {columns.map(col => (
-                    <td key={col.key}>
-                      {col.key === 'sup' ? (
+            )}
+
+            {versenyszamok.map((item) => (
+              <tr key={item.id} className={isEditing === item.id ? 'table-info' : ''}>
+                {columns.map(col => (
+                  <td key={col.key}>
+                    {isEditing === item.id ? (
+                      col.key === 'sup' ? (
                         <Form.Check
                           type="checkbox"
                           checked={formData[col.key] || false}
@@ -206,156 +248,141 @@ const handleSaveSzervezok = async () => {
                           value={formData[col.key] || ''}
                           onChange={(e) => handleChange(col.key, e.target.value)}
                         />
-                      )}
-                    </td>
-                  ))}
-                  <td>
-                    <div className="">
+                      )
+                    ) : (
+                      col.key === 'sup'
+                        ? (item[col.key] ? '✓' : '')
+                        : (item[col.key] || '')
+                    )}
+                  </td>
+                ))}
+                <td>
+                  {isEditing === item.id ? (
+                    <div className="d-flex justify-content-center gap-2">
                       <Button variant="success" size="sm" onClick={handleSave}><CheckLg /></Button>
                       <Button variant="secondary" size="sm" onClick={handleCancel}><XLg /></Button>
                     </div>
-                  </td>
-                </tr>
-              )}
+                  ) : (
+                    <div className="d-flex justify-content-center gap-2">
+                      <Button variant="primary" size="sm" onClick={() => handleEdit(item)}><Pencil /></Button>
+                      <Button variant="danger" size="sm" onClick={() => handleDelete(item.id)}><Trash /></Button>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr className={isEditingSzervezok ? 'szervezok-editing' : ''}>
+              <td><strong>Szervező felnőttek:</strong></td>
+              <td></td>
+              <td></td>
+              <td>
+                <Form.Control
+                  type="text"
+                  placeholder="Futás"
+                  value={szervezok.futas || ''}
+                  onChange={(e) => setSzervezok({ ...szervezok, futas: e.target.value })}
+                  disabled={!isEditingSzervezok}
+                />
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  placeholder="Célbadobás"
+                  value={szervezok.celbadobas || ''}
+                  onChange={(e) => setSzervezok({ ...szervezok, celbadobas: e.target.value })}
+                  disabled={!isEditingSzervezok}
+                />
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  placeholder="Sakk"
+                  value={szervezok.sakk || ''}
+                  onChange={(e) => setSzervezok({ ...szervezok, sakk: e.target.value })}
+                  disabled={!isEditingSzervezok}
+                />
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  placeholder="Bicikli"
+                  value={szervezok.bicikli_futobicikli || ''}
+                  onChange={(e) => setSzervezok({ ...szervezok, bicikli_futobicikli: e.target.value })}
+                  disabled={!isEditingSzervezok}
+                />
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  placeholder="Motoros túra"
+                  value={szervezok.motor_biciklitura_gyerek || ''}
+                  onChange={(e) => setSzervezok({ ...szervezok, motor_biciklitura_gyerek: e.target.value })}
+                  disabled={!isEditingSzervezok}
+                />
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  placeholder="Rajz"
+                  value={szervezok.rajz || ''}
+                  onChange={(e) => setSzervezok({ ...szervezok, rajz: e.target.value })}
+                  disabled={!isEditingSzervezok}
+                />
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  placeholder="Kincskeresés"
+                  value={szervezok.kincskereses || ''}
+                  onChange={(e) => setSzervezok({ ...szervezok, kincskereses: e.target.value })}
+                  disabled={!isEditingSzervezok}
+                />
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  placeholder="Úszás"
+                  value={szervezok.uszas_uszogumi || ''}
+                  onChange={(e) => setSzervezok({ ...szervezok, uszas_uszogumi: e.target.value })}
+                  disabled={!isEditingSzervezok}
+                />
+              </td>
+              <td>
+                <Form.Control
+                  type="text"
+                  placeholder="SUP"
+                  value={szervezok.sup || ''}
+                  onChange={(e) => setSzervezok({ ...szervezok, sup: e.target.value })}
+                  disabled={!isEditingSzervezok}
+                />
+              </td>
+              <td>
+                {isEditingSzervezok ? (
+                  <div className="d-flex justify-content-center gap-2">
+                    <Button variant="success" size="sm" onClick={handleSaveSzervezok}>
+                      <CheckLg />
+                    </Button>
+                    <Button variant="secondary" size="sm" onClick={handleCancelSzervezok}>
+                      <XLg />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button variant="primary" size="sm" onClick={handleEditSzervezok}>
+                    <Pencil />
+                  </Button>
+                )}
+              </td>
+            </tr>
+          </tfoot>
+        </Table>
+      </div>
 
-              {versenyszamok.map((item) => (
-                <tr key={item.id} className={isEditing === item.id ? 'table-info' : ''}>
-                  {columns.map(col => (
-                    <td key={col.key}>
-                      {isEditing === item.id ? (
-                        col.key === 'sup' ? (
-                          <Form.Check
-                            type="checkbox"
-                            checked={formData[col.key] || false}
-                            onChange={(e) => handleChange(col.key, e.target.checked)}
-                          />
-                        ) : (
-                          <Form.Control
-                            type="text"
-                            value={formData[col.key] || ''}
-                            onChange={(e) => handleChange(col.key, e.target.value)}
-                          />
-                        )
-                      ) : (
-                        col.key === 'sup'
-                          ? (item[col.key] ? '✓' : '')
-                          : (item[col.key] || '')
-                      )}
-                    </td>
-                  ))}
-                  <td>
-                    {isEditing === item.id ? (
-                      <div className="d-flex justify-content-center gap-2">
-                        <Button variant="success" size="sm" onClick={handleSave}><CheckLg /></Button>
-                        <Button variant="secondary" size="sm" onClick={handleCancel}><XLg /></Button>
-                      </div>
-                    ) : (
-                      <div className="d-flex justify-content-center gap-2">
-                        <Button variant="primary" size="sm" onClick={() => handleEdit(item)}><Pencil /></Button>
-                        <Button variant="danger" size="sm" onClick={() => handleDelete(item.id)}><Trash /></Button>
-                      </div>
-                    )}
-                  </td>
-                  
-
-                </tr>
-                
-              ))}
-            </tbody>
-            <tfoot>
-  <tr className="table-secondary">
-    <td><strong>Szervező felnőttek:</strong></td>
-    <td></td>
-    <td></td>
-    <td>
-      <Form.Control
-        type="text"
-        placeholder="Futás"
-        value={szervezok.futas || ''}
-        onChange={(e) => setSzervezok({ ...szervezok, futas: e.target.value })}
-      />
-    </td>
-    <td>
-      <Form.Control
-        type="text"
-        placeholder="Célbadobás"
-        value={szervezok.celbadobas || ''}
-        onChange={(e) => setSzervezok({ ...szervezok, celbadobas: e.target.value })}
-      />
-    </td>
-    <td>
-      <Form.Control
-        type="text"
-        placeholder="Sakk"
-        value={szervezok.sakk || ''}
-        onChange={(e) => setSzervezok({ ...szervezok, sakk: e.target.value })}
-      />
-    </td>
-    <td>
-      <Form.Control
-        type="text"
-        placeholder="Bicikli"
-        value={szervezok.bicikli_futobicikli || ''}
-        onChange={(e) => setSzervezok({ ...szervezok, bicikli_futobicikli: e.target.value })}
-      />
-    </td>
-    <td>
-      <Form.Control
-        type="text"
-        placeholder="Motoros túra"
-        value={szervezok.motor_biciklitura_gyerek || ''}
-        onChange={(e) => setSzervezok({ ...szervezok, motor_biciklitura_gyerek: e.target.value })}
-      />
-    </td>
-    <td>
-      <Form.Control
-        type="text"
-        placeholder="Rajz"
-        value={szervezok.rajz || ''}
-        onChange={(e) => setSzervezok({ ...szervezok, rajz: e.target.value })}
-      />
-    </td>
-    <td>
-      <Form.Control
-        type="text"
-        placeholder="Kincskeresés"
-        value={szervezok.kincskereses || ''}
-        onChange={(e) => setSzervezok({ ...szervezok, kincskereses: e.target.value })}
-      />
-    </td>
-    <td>
-      <Form.Control
-        type="text"
-        placeholder="Úszás"
-        value={szervezok.uszas_uszogumi || ''}
-        onChange={(e) => setSzervezok({ ...szervezok, uszas_uszogumi: e.target.value })}
-      />
-    </td>
-    <td>
-      <Form.Control
-        type="text"
-        placeholder="SUP"
-        value={szervezok.sup || ''}
-        onChange={(e) => setSzervezok({ ...szervezok, sup: e.target.value })}
-      />
-    </td>
-    <td>
-      <Button variant="success" size="sm" onClick={handleSaveSzervezok}>
-        <CheckLg />
-      </Button>
-    </td>
-  </tr>
-</tfoot>
-
-
-          </Table>
-        </Card.Body>
-
-        <Card.Footer className="text-muted">
-          Összesen: <strong>{versenyszamok.length}</strong> résztvevő
-        </Card.Footer>
-      </Card>
-    </Container>
+      <div className="csolimpia-footer">
+        Összesen: <strong>{versenyszamok.length}</strong> résztvevő
+      </div>
+    </div>
   );
 };
 

@@ -9,3 +9,18 @@
   background-color: #4d885a;
   border-radius: 15px;
 }
+
+.modal-body label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.modal-body .form-control {
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.modal-content {
+  border-radius: 12px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+}

@@ -1,0 +1,200 @@
+/* Csolimpia.css */
+
+/* Fő konténer */
+.csolimpia-container {
+  width: 100%;
+  margin: 20px auto;
+  background-color: #4d7f88;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+/* Fejléc */
+.csolimpia-header {
+  background-color: #4d7f88;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.csolimpia-header h4 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Táblázat wrapper - görgetés */
+.csolimpia-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  background-color: #e8f4f8;
+}
+
+/* Táblázat */
+.csolimpia-table {
+  width: 100%;
+  min-width: 1200px;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 13px;
+  background-color: white;
+}
+
+.csolimpia-table th,
+.csolimpia-table td {
+  border: 1px solid #ddd;
+  padding: 10px 8px;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Fejléc sor */
+.csolimpia-table thead th {
+  background-color: #6fa8b8;
+  color: white;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+/* Páros sorok */
+.csolimpia-table tbody tr:nth-child(even) {
+  background-color: #f0f8fb;
+}
+
+/* Hover */
+.csolimpia-table tbody tr:hover {
+  background-color: #d4e8ed;
+}
+
+/* Szerkesztés alatt */
+.csolimpia-table tbody tr.table-info {
+  background-color: #b8dae8 !important;
+}
+
+/* Lábléc (szervezők) */
+.csolimpia-table tfoot tr {
+  background-color: #5a8a9a;
+}
+
+.csolimpia-table tfoot td {
+  font-weight: bold;
+  color: white;
+  padding: 12px 8px;
+}
+
+.csolimpia-table tfoot td:first-child {
+  background-color: #4d7f88;
+}
+
+/* Input mezők */
+.csolimpia-table input[type="text"] {
+  width: 100%;
+  min-width: 70px;
+  font-size: 12px;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.csolimpia-table tfoot input[type="text"] {
+  background-color: white;
+}
+
+/* Checkbox */
+.csolimpia-table .form-check {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.csolimpia-table .form-check-input {
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Gombok */
+.csolimpia-table .btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.csolimpia-table .d-flex.gap-2 {
+  gap: 4px !important;
+}
+
+.csolimpia-table td:last-child {
+  min-width: 110px;
+}
+
+/* Lábléc info */
+.csolimpia-footer {
+  background-color: #f8f9fa;
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  border-top: 2px solid #4d7f88;
+}
+
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Responsive */
+@media screen and (max-width: 992px) {
+  .csolimpia-header h4 {
+    font-size: 18px;
+  }
+  
+  .csolimpia-table {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .csolimpia-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .csolimpia-table {
+    font-size: 11px;
+  }
+
+  .csolimpia-table th,
+  .csolimpia-table td {
+    padding: 6px 4px;
+  }
+
+  .csolimpia-table .btn-sm {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .csolimpia-table {
+    font-size: 10px;
+  }
+
+  .csolimpia-table th,
+  .csolimpia-table td {
+    padding: 4px 3px;
+  }
+}

@@ -8,7 +8,7 @@
   gap: 20px;
 }
 
-.keret{
+.keret {
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
   background-color: rgb(135, 109, 76);
@@ -20,6 +20,10 @@
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
+  min-height: 44px; /* Érintésre optimalizált */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .fout {
@@ -49,72 +53,30 @@
   z-index: 10;
 }
 
-/* Ezen kívül az alábbi stílusok maradnak az eddigi színkódokkal */
+/* Színek - változatlan */
+.fszt8 { background-color: rgb(188, 105, 105); }
+.fszt7 { background-color: rgb(184, 68, 68); }
+.fszt6 { background-color: rgb(185, 48, 48); }
+.fszt5 { background-color: rgb(182, 28, 28); }
+.fszt4 { background-color: rgb(107, 94, 176); }
+.fszt3 { background-color: rgb(89, 70, 187); }
+.fszt2 { background-color: rgb(61, 36, 185); }
+.fszt1 { background-color: rgb(33, 0, 201); }
 
-/* Színek */
-.fszt8 {
-  background-color: rgb(188, 105, 105);
-}
-.fszt7 {
-  background-color: rgb(184, 68, 68);
-}
-.fszt6 {
-  background-color: rgb(185, 48, 48);
-}
-.fszt5 {
-  background-color: rgb(182, 28, 28);
-}
-.fszt4 {
-  background-color: rgb(107, 94, 176);
-}
-.fszt3 {
-  background-color: rgb(89, 70, 187);
-}
-.fszt2 {
-  background-color: rgb(61, 36, 185);
-}
-.fszt1 {
-  background-color: rgb(33, 0, 201);
-}
+.em1 { background-color: rgb(167, 114, 167); }
+.em2 { background-color: rgb(128, 70, 128); }
+.em3 { background-color: rgb(132, 35, 132); }
+.em4 { background-color: rgb(131, 0, 131); }
+.em5 { background-color: rgb(116, 167, 114); }
+.em6 { background-color: rgb(92, 166, 89); }
+.em7 { background-color: rgb(49, 161, 45); }
+.em8 { background-color: rgb(5, 163, 0); }
 
-.em1 {
-  background-color: rgb(167, 114, 167);
-}
-.em2 {
-  background-color: rgb(128, 70, 128);
-}
-.em3 {
-  background-color: rgb(132, 35, 132);
-}
-.em4 {
-  background-color: rgb(131, 0, 131);
-}
+.f1 { background-color: rgb(177, 156, 0); }
+.f2 { background-color: rgb(181, 168, 67); }
+.f3 { background-color: rgb(144, 127, 0); }
+.f4 { background-color: rgb(89, 79, 0); }
 
-.em5 {
-  background-color: rgb(116, 167, 114);
-}
-.em6 {
-  background-color: rgb(92, 166, 89);
-}
-.em7 {
-  background-color: rgb(49, 161, 45);
-}
-.em8 {
-  background-color: rgb(5, 163, 0);
-}
-
-.f1 {
-  background-color: rgb(177, 156, 0);
-}
-.f2 {
-  background-color: rgb(181, 168, 67);
-}
-.f3 {
-  background-color: rgb(144, 127, 0);
-}
-.f4 {
-  background-color: rgb(89, 79, 0);
-}
 .fahazak .tooltip {
   position: absolute;
   top: 0;
@@ -125,15 +87,15 @@
   border-radius: 5px;
 }
 
-
-
 .modal-content {
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow: auto;
 }
 
-/* Optional, customize modal content (header, body, footer) */
 .modal-header {
   background-color: #f8f9fa;
   border-bottom: 1px solid #dee2e6;
@@ -149,35 +111,68 @@
   margin-bottom: 10px;
   padding: 8px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
-.modal-helye{
-    position:fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: 'flex';
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+.modal-helye {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 10px;
 }
 
-.modal-kinezet{
-      background-color: white;
-      border-radius: 8px;
-      min-width: 400px;
-      max-width: 90%;
-      max-height: 80vh;
-      overflow: auto;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+.modal-kinezet {
+  background-color: white;
+  border-radius: 8px;
+  min-width: 300px;
+  max-width: 90%;
+  max-height: 80vh;
+  overflow: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.modal-header-kiiras{
-    padding: 20px;
-    border-bottom: 1px solid #e0e0e0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center
+.modal-header-kiiras {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* MOBILOS OPTIMALIZÁLÁS */
+@media (max-width: 768px) {
+  .haz div,
+  .fahazak div {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .modal-kinezet {
+    min-width: 280px;
+    max-width: 95%;
+  }
+
+  .modal-body input {
+    font-size: 16px; /* Megakadályozza az auto-zoom-ot iOS-en */
+  }
+}
+
+@media (max-width: 480px) {
+  .foglalo-wrapper {
+    gap: 10px;
+    padding: 3px;
+    margin: 3px;
+  }
+
+  .tooltip {
+    font-size: 10px;
+    padding: 3px;
+  }
 }
