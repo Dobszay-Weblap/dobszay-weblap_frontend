@@ -58,14 +58,6 @@
   background-color: #e79696;
 }
 
-.etel-table td:first-child,
-.etel-table th:first-child {
-  position: sticky;
-  left: 0;
-  z-index: 1;
-  background-color: inherit;
-  box-shadow: 2px 0 5px rgba(45, 25, 25, 0.1);
-}
 
 .etel-table th:first-child {
   z-index: 3;

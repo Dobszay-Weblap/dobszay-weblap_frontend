@@ -467,41 +467,42 @@ export default function Hazak() {
           })}
         </article>
 
-        <article className="haz">
-          {[
-            { nev: "Emelet 1", id: "Em1" },
-            { nev: "Emelet 2", id: "Em2" },
-            { nev: "Emelet 3", id: "Em3" },
-            { nev: "Emelet 4", id: "Em4" },
-            { nev: "Emelet 5", id: "Em5" },
-            { nev: "Emelet 6", id: "Em6" },
-            { nev: "Emelet 7", id: "Em7" },
-            { nev: "Emelet 8", id: "Em8" },
-            { nev: "Fszt 8", id: "Fszt8" },
-            { nev: "Fszt 7", id: "Fszt7" },
-            { nev: "Fszt 6", id: "Fszt6" },
-            { nev: "Fszt 5", id: "Fszt5" },
-            { nev: "Fszt 4", id: "Fszt4" },
-            { nev: "Fszt 3", id: "Fszt3" },
-            { nev: "Fszt 2", id: "Fszt2" },
-            { nev: "Fszt 1", id: "Fszt1" }
-          ].map((szoba) => {
-            const osztalyNev = szoba.nev.toLowerCase()
-              .replace("emelet ", "em")
-              .replace("fszt ", "fszt");
-            
-            return (
-              <div
-                key={szoba.id}
-                className={getClassName(osztalyNev, szoba.id)}
-                onClick={() => openModal(szoba.id)}
-                style={{ cursor: 'pointer' }}
-              >
-                {szoba.nev}
-              </div>
-            );
-          })}
-        </article>
+        <div className="emelet-fszt-wrapper">
+  <div className="emelet">
+    {[1,2,3,4,5,6,7,8].map((szam) => {
+      const szobaId = `Em${szam}`;
+      const osztalyNev = `em${szam}`;
+      return (
+        <div
+          key={szobaId}
+          className={getClassName(osztalyNev, szobaId)}
+          onClick={() => openModal(szobaId)}
+          style={{ cursor: 'pointer' }}
+        >
+          Emelet {szam}
+        </div>
+      );
+    })}
+  </div>
+
+  <div className="foldszint">
+    {[8,7,6,5,4,3,2,1].map((szam) => {
+      const szobaId = `Fszt${szam}`;
+      const osztalyNev = `fszt${szam}`;
+      return (
+        <div
+          key={szobaId}
+          className={getClassName(osztalyNev, szobaId)}
+          onClick={() => openModal(szobaId)}
+          style={{ cursor: 'pointer' }}
+        >
+          Fszt {szam}
+        </div>
+      );
+    })}
+  </div>
+</div>
+
 
         <aside>
           <div className="fout">Szigeti József utca</div>

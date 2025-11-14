@@ -9,22 +9,44 @@
 }
 
 .keret {
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
   background-color: rgb(135, 109, 76);
   padding: 5px;
 }
 
-.haz div,
-.fahazak div {
+.fahazak div,
+.emelet div,
+.foldszint div {
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
-  min-height: 44px; /* Érintésre optimalizált */
-  display: flex;
   align-items: center;
   justify-content: center;
 }
+
+.emelet-fszt-wrapper > div {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr); /* mindkét sor 8 oszlop */
+  gap: 10px;
+}
+
+
+.fahazak div{
+  color: white;
+}
+
+.emelet div{
+  color: rgb(18, 38, 93);
+  font-size: 12px;
+  margin: 5px;
+}
+
+.foldszint div{
+  color: rgb(0, 255, 132);
+  font-size: 12px;
+  margin: 5px;
+}
+
+
 
 .fout {
   background-color: black;
@@ -148,10 +170,14 @@
 
 /* MOBILOS OPTIMALIZÁLÁS */
 @media (max-width: 768px) {
-  .haz div,
-  .fahazak div {
+  .fahazak div,
+  .emelet div,
+  .foldszint div {
     padding: 8px;
     font-size: 14px;
+  }
+  .emelet-fszt-wrapper > div {
+    grid-template-columns: repeat(4, 1fr); /* 4 oszlop, két sorban */
   }
 
   .modal-kinezet {
@@ -160,7 +186,7 @@
   }
 
   .modal-body input {
-    font-size: 16px; /* Megakadályozza az auto-zoom-ot iOS-en */
+    font-size: 16px;
   }
 }
 
