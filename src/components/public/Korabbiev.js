@@ -62,7 +62,7 @@ const KorabbiEv = () => {
         setUploadMessage('');
 
         try {
-            const response = await myAxios.post(
+            await myAxios.post(
                 `http://localhost:8000/api/korabbiev/${year}/upload-image`,
                 formData,
                 {
@@ -93,7 +93,7 @@ const KorabbiEv = () => {
         setUploadMessage('');
 
         try {
-            const response = await myAxios.post(
+            await myAxios.post(
                 `http://localhost:8000/api/korabbiev/${year}/upload-video`,
                 formData,
                 {

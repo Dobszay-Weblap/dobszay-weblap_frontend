@@ -103,16 +103,16 @@ const isAdmin = () => {
 
   return (
     <div style={{ padding: '20px', margin: '0 auto', backgroundColor:'lightblue', borderBottomLeftRadius:'15px', borderBottomRightRadius:'15px'}}>
-      <h2 style={{ marginBottom: '30px', fontSize:'50px', fontWeight:'bolder' }}>Ételek Összesítő</h2>
+      <h2 style={{ marginBottom: '30px', fontSize:'30px', fontWeight:'bolder' }}>Ételek Összesítő</h2>
 
       {/* Napi összesítés */}
-      <div style={{ marginBottom: '40px' }}>
-        <h3>Napi Összesítés</h3>
+      <div style={{ overflowX: 'auto', width: '100%' }}>
         <table style={{ 
-          width: '100%', 
-          borderCollapse: 'collapse', 
+          width: '100%',
+          borderCollapse: 'collapse',
           backgroundColor: 'white',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          fontSize: '14px' // kisebb betű
         }}>
           <thead>
             <tr style={{ backgroundColor: '#f5f5f5' }}>

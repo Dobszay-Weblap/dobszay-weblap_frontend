@@ -5,7 +5,7 @@ h1 {
 
 footer p {
   text-align: center !important;
-  padding: 15px;
+  padding: 10px;
   background-color: antiquewhite;
   font-family: 'Times New Roman', Times, serif;
   border-bottom-left-radius: 5px;
@@ -13,7 +13,6 @@ footer p {
 }
 
 article {
-  padding: 10px;
   margin: 10px;
   display: grid;
   grid-gap: 10px;
@@ -34,8 +33,6 @@ aside {
 
 .kezdokep img {
   width: 100%;
-  height: auto; /* Megőrzi az arányt */
-  max-width: 100%;
 }
 
 .navok {
@@ -43,6 +40,7 @@ aside {
   border-top-left-radius: 5px;
   padding: 5px;
   background-color: lightskyblue;
+  font-size: 11px;
 }
 
 .resetpasswordpage {

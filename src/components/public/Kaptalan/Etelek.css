@@ -30,6 +30,7 @@
 .etel-table {
   width: 100%;
   min-width: 1000px; 
+  min-width: unset;
   font-family: Arial, sans-serif;
   font-size: 12px;
   background-color: aqua;
@@ -40,7 +41,7 @@
 .etel-table th,
 .etel-table td {
   border: 1px solid #ddd;
-  padding: 10px;
+  padding: 8px;
   text-align: center;
   white-space: nowrap; 
   min-width: 80px; 
@@ -108,19 +109,6 @@
   opacity: 0.8;
 }
 
-.etel-table-container::after {
-  content: "← Görgess →";
-  position: absolute;
-  bottom: 5px;
-  right: 10px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  pointer-events: none;
-  animation: fadeInOut 3s ease-in-out infinite;
-}
 
 @keyframes fadeInOut {
   0%, 100% { opacity: 0; }
@@ -136,6 +124,7 @@
   .etel-table td {
     padding: 6px;
     min-width: 70px;
+    font-size: 11px;
   }
 
   .etel-table button {
@@ -162,6 +151,7 @@
   .etel-table td {
     padding: 4px;
     min-width: 60px;
+    font-size: 10px;
   }
 
   .etel-table button {

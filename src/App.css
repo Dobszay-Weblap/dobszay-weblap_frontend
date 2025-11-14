@@ -1,12 +1,6 @@
-html, body {
-  overflow-x: auto;
-}
-
-
 .App {
-  text-align: center;
   background-color: rgb(136, 255, 0);
-  padding: 15px;
+  padding: 10px;
 }
 
 

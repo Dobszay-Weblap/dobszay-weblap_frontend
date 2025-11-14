@@ -25,8 +25,7 @@
 
 .emelet-fszt-wrapper > div {
   display: grid;
-  grid-template-columns: repeat(8, 1fr); /* mindkét sor 8 oszlop */
-  gap: 10px;
+  grid-template-columns: repeat(8, 1fr);
 }
 
 
@@ -38,15 +37,19 @@
   color: rgb(18, 38, 93);
   font-size: 12px;
   margin: 5px;
+  text-align: center;
 }
 
 .foldszint div{
   color: rgb(0, 255, 132);
   font-size: 12px;
   margin: 5px;
+  text-align: center;
 }
 
-
+h2{
+  text-align: center;
+}
 
 .fout {
   background-color: black;
@@ -76,28 +79,28 @@
 }
 
 /* Színek - változatlan */
-.fszt8 { background-color: rgb(188, 105, 105); }
-.fszt7 { background-color: rgb(184, 68, 68); }
-.fszt6 { background-color: rgb(185, 48, 48); }
-.fszt5 { background-color: rgb(182, 28, 28); }
-.fszt4 { background-color: rgb(107, 94, 176); }
-.fszt3 { background-color: rgb(89, 70, 187); }
-.fszt2 { background-color: rgb(61, 36, 185); }
-.fszt1 { background-color: rgb(33, 0, 201); }
+.fszt8 { background-color: rgb(188, 105, 105); margin-right: 5px;}
+.fszt7 { background-color: rgb(184, 68, 68);}
+.fszt6 { background-color: rgb(185, 48, 48);}
+.fszt5 { background-color: rgb(182, 28, 28);}
+.fszt4 { background-color: rgb(107, 94, 176);}
+.fszt3 { background-color: rgb(89, 70, 187);}
+.fszt2 { background-color: rgb(61, 36, 185);}
+.fszt1 { background-color: rgb(33, 0, 201); margin-left: 5px;}
 
-.em1 { background-color: rgb(167, 114, 167); }
-.em2 { background-color: rgb(128, 70, 128); }
-.em3 { background-color: rgb(132, 35, 132); }
-.em4 { background-color: rgb(131, 0, 131); }
-.em5 { background-color: rgb(116, 167, 114); }
-.em6 { background-color: rgb(92, 166, 89); }
-.em7 { background-color: rgb(49, 161, 45); }
-.em8 { background-color: rgb(5, 163, 0); }
+.em1 { background-color: rgb(167, 114, 167); margin-left: 5px;}
+.em2 { background-color: rgb(128, 70, 128);}
+.em3 { background-color: rgb(132, 35, 132);}
+.em4 { background-color: rgb(131, 0, 131);}
+.em5 { background-color: rgb(116, 167, 114);}
+.em6 { background-color: rgb(92, 166, 89);}
+.em7 { background-color: rgb(49, 161, 45);}
+.em8 { background-color: rgb(5, 163, 0);margin-right: 5px; }
 
-.f1 { background-color: rgb(177, 156, 0); }
-.f2 { background-color: rgb(181, 168, 67); }
-.f3 { background-color: rgb(144, 127, 0); }
-.f4 { background-color: rgb(89, 79, 0); }
+.f1 { background-color: rgb(177, 156, 0); margin-left: 5px;}
+.f2 { background-color: rgb(181, 168, 67);}
+.f3 { background-color: rgb(144, 127, 0); margin-right: 5px;}
+.f4 { background-color: rgb(89, 79, 0);margin-left: 5px; }
 
 .fahazak .tooltip {
   position: absolute;
