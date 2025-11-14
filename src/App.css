@@ -1,6 +1,5 @@
 html, body {
-  min-width: 850px;
-  overflow-x: auto; /* Ha kisebb lenne, vízszintes görgetés jelenik meg */
+  overflow-x: auto;
 }
 
 

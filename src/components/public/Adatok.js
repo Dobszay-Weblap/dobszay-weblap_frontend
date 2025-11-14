@@ -139,10 +139,7 @@ const handleChange = (e) => {
         .catch((error) => console.error("Hiba:", error));
     }
   };
-  
-  const handleModalOpen = () => {
-    setIsModalOpen(true);
-  };
+
 
   // Modal bezárása
   const handleModalClose = () => {

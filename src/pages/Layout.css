@@ -1,7 +1,6 @@
 h1 {
   text-align: center !important;
   padding: 5px;
-  font-size: clamp(1.2rem, 4vw, 2rem); /* Reszponzív betűméret */
 }
 
 footer p {
@@ -20,7 +19,7 @@ article {
   grid-gap: 10px;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  color: white;
+  color: rgb(115, 95, 95);
   border-radius: 10px;
   text-align: center !important;
 }

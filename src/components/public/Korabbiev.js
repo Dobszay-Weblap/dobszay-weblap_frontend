@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { myAxios } from '../../contexts/MyAxios';
 import "./Korabbiev.css";
@@ -11,17 +11,7 @@ const KorabbiEv = () => {
     const [uploading, setUploading] = useState(false);
     const [uploadMessage, setUploadMessage] = useState('');
 
-        useEffect(() => {
-        const parsedYear = parseInt(year, 10);
-        if (isNaN(parsedYear) || parsedYear <= 0) {
-            setError('Érvénytelen év');
-            return;
-        }
-
-        fetchData();
-    }, [year]);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setVideos([]);
         setKepek([]);
         setError(null);
@@ -49,9 +39,17 @@ const KorabbiEv = () => {
             console.error('Hiba üzenet:', err.message);
             setError('Hiba történt az adatok lekérésekor: ' + (err.response?.data?.message || err.message));
         }
-    };
+    }, [year]);
 
+    useEffect(() => {
+        const parsedYear = parseInt(year, 10);
+        if (isNaN(parsedYear) || parsedYear <= 0) {
+            setError('Érvénytelen év');
+            return;
+        }
 
+        fetchData();
+    }, [year, fetchData]);
 
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
@@ -73,7 +71,7 @@ const KorabbiEv = () => {
                     },
                 }
             );
-            setUploadMessage('Kép sikeresen feltöltve!');
+            //setUploadMessage(response.data.message || 'Kép sikeresen feltöltve!');
             fetchData(); // Frissítjük a listát
         } catch (err) {
             setUploadMessage('Hiba a kép feltöltése során');
@@ -104,7 +102,7 @@ const KorabbiEv = () => {
                     },
                 }
             );
-            setUploadMessage('Videó sikeresen feltöltve!');
+            //setUploadMessage(response.data.message || 'Videó sikeresen feltöltve!');
             fetchData(); // Frissítjük a listát
         } catch (err) {
             setUploadMessage('Hiba a videó feltöltése során');
@@ -123,7 +121,7 @@ const KorabbiEv = () => {
             await myAxios.delete(`http://localhost:8000/api/korabbiev/${year}/delete-image`, {
                 data: { filepath }
             });
-            setUploadMessage('Kép törölve');
+            //setUploadMessage('Kép törölve');
             fetchData();
         } catch (err) {
             setUploadMessage('Hiba a törlés során');
@@ -139,7 +137,7 @@ const KorabbiEv = () => {
             await myAxios.delete(`http://localhost:8000/api/korabbiev/${year}/delete-video`, {
                 data: { filepath }
             });
-            setUploadMessage('Videó törölve');
+            //setUploadMessage('Videó törölve');
             fetchData();
         } catch (err) {
             setUploadMessage('Hiba a törlés során');
