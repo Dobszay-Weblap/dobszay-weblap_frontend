@@ -77,7 +77,7 @@ const CustomModal = ({ show, onClose, title, children, footer }) => {
   };
 
 
-export default function Hazak() {
+export default function KaptalanHazak() {
   const [foglaltsag, setFoglaltsag] = useState({});
   const [aktualisSzoba, setAktualisSzoba] = useState(null);
   const [ujLako, setUjLako] = useState("");

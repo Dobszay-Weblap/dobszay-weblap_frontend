@@ -6,6 +6,7 @@ import { useAuth } from "../../../contexts/AuthContext";
 const Etelek = () => {
   const [menuk, setMenuk] = useState([]);
   const [etelek, setEtelek] = useState([]);
+  const [csoportok, setCsoportok] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editingMenuId, setEditingMenuId] = useState(null);
   const [editedData, setEditedData] = useState({});
@@ -13,10 +14,10 @@ const Etelek = () => {
   const [kezdoDatum, setKezdoDatum] = useState("");
   const [ujDatum, setUjDatum] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showSorrendModal, setShowSorrendModal] = useState(false);
 
   const { user } = useAuth();
 
-  // Generálunk 7 napot a kezdő dátumból
   const datumok = kezdoDatum
     ? Array.from({ length: 7 }, (_, i) => {
         const d = new Date(kezdoDatum);
@@ -25,7 +26,6 @@ const Etelek = () => {
       })
     : [];
 
-  // Kezdő dátum betöltése
   const betoltDatum = () => {
     myAxios.get('/api/kezdo-datum')
       .then((res) => {
@@ -34,7 +34,14 @@ const Etelek = () => {
       .catch((err) => console.error("Dátum betöltési hiba:", err));
   };
 
-  // Összes adat betöltése
+  const betoltCsoportok = () => {
+    myAxios.get('/api/csoportok')
+      .then((res) => {
+        setCsoportok(res.data.sort((a, b) => (a.sorrend || 0) - (b.sorrend || 0)));
+      })
+      .catch((err) => console.error("Csoportok betöltési hiba:", err));
+  };
+
   const betoltOsszesMenukEsEteleket = () => {
     setLoading(true);
     Promise.all([
@@ -49,9 +56,9 @@ const Etelek = () => {
       .finally(() => setLoading(false));
   };
 
-  // Kezdeti betöltés
   useEffect(() => {
     betoltDatum();
+    betoltCsoportok();
   }, []);
 
   useEffect(() => {
@@ -71,7 +78,6 @@ const Etelek = () => {
     return user?.jogosultsagi_szint === "admin";
   };
 
-  // Ellenőrzi, hogy hány főétel van kitöltve
   const getActiveMenuItems = (menu) => {
     if (!menu) return [];
     const items = [];
@@ -81,7 +87,6 @@ const Etelek = () => {
     return items;
   };
 
-  // Kezdő dátum mentése
   const handleDatumMentes = () => {
     if (!ujDatum) {
       return;
@@ -91,7 +96,7 @@ const Etelek = () => {
     myAxios.post("/api/kezdo-datum", { datum: ujDatum })
       .then(() => {
         setUjDatum("");
-        betoltDatum(); // Ez automatikusan újratölti a menüket és ételeket is
+        betoltDatum();
       })
       .catch((err) => {
         alert("Hiba: " + (err.response?.data?.error || err.message));
@@ -99,7 +104,6 @@ const Etelek = () => {
       .finally(() => setLoading(false));
   };
 
-  // Étel szerkesztés
   const handleEdit = (etel) => {
     setEditingId(etel.id);
     setEditedData((prev) => ({
@@ -137,7 +141,6 @@ const Etelek = () => {
       .catch((err) => console.error("Mentési hiba:", err));
   };
 
-  // Menü szerkesztés (csak admin)
   const handleEditMenu = (menu) => {
     setEditingMenuId(menu.id);
     setEditedMenuData((prev) => ({
@@ -165,6 +168,57 @@ const Etelek = () => {
       .catch((err) => console.error("Menü mentési hiba:", err));
   };
 
+  // ✨ Csoport sorrend kezelés
+  const moveCsoportUp = (index) => {
+    if (index === 0) return;
+    const newCsoportok = [...csoportok];
+    [newCsoportok[index - 1], newCsoportok[index]] = [newCsoportok[index], newCsoportok[index - 1]];
+    setCsoportok(newCsoportok);
+  };
+
+  const moveCsoportDown = (index) => {
+    if (index === csoportok.length - 1) return;
+    const newCsoportok = [...csoportok];
+    [newCsoportok[index], newCsoportok[index + 1]] = [newCsoportok[index + 1], newCsoportok[index]];
+    setCsoportok(newCsoportok);
+  };
+
+  const saveCsoportSorrend = () => {
+    const csoportokWithSorrend = csoportok.map((csoport, index) => ({
+      id: csoport.id,
+      sorrend: index + 1
+    }));
+
+    myAxios.put('/api/csoportok/sorrend', {
+      csoportok: csoportokWithSorrend
+    })
+      .then(() => {
+        setShowSorrendModal(false);
+        //alert('✅ Sorrend sikeresen mentve!');
+        betoltCsoportok();
+        betoltOsszesMenukEsEteleket();
+      })
+      .catch((err) => {
+        console.error('Hiba a sorrend mentésekor:', err);
+        alert('Nem sikerült menteni a sorrendet.');
+      });
+  };
+
+  // Csoportosított és rendezett ételek lekérése egy adott dátumra
+  const getRendezettEtelek = (datum) => {
+    const napiEtelek = etelek.filter(e => e.datum === datum);
+    
+    return napiEtelek.sort((a, b) => {
+      const aCsoport = csoportok.find(c => c.id === a.csoport_id);
+      const bCsoport = csoportok.find(c => c.id === b.csoport_id);
+      
+      const aSorrend = aCsoport?.sorrend || 999;
+      const bSorrend = bCsoport?.sorrend || 999;
+      
+      return aSorrend - bSorrend;
+    });
+  };
+
   const getRowTotal = (etel) =>
     (Number(etel.adag_A) || 0) +
     (Number(etel.adag_B) || 0) +
@@ -176,24 +230,173 @@ const Etelek = () => {
 
   return (
     <div className="etel-table-container">
-      <h2>Étkezési táblázat</h2>      
+      <h2>Étkezési táblázat</h2>
+      
       {isAdmin() && (
         <div style={{ marginBottom: "20px", padding: "15px", backgroundColor: "#f9f9f9" }}>
-          <h3>Hét kezdő dátumának beállítása</h3>
-          <p><strong>Aktuális kezdő dátum:</strong> {kezdoDatum || "nincs beállítva"}</p>
-          <div style={{ marginTop: "10px" }}>
-            <input
-              type="date"
-              value={ujDatum}
-              onChange={(e) => setUjDatum(e.target.value)}
-              style={{ padding: "8px", marginRight: "10px", fontSize: "14px" }}
-            />
-            <button 
-              onClick={handleDatumMentes}
-              style={{ padding: "8px 16px", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
+          <h3>Admin beállítások</h3>
+          
+          <div style={{ marginBottom: "15px" }}>
+            <button
+              onClick={() => setShowSorrendModal(true)}
+              style={{
+                padding: "10px 20px",
+                backgroundColor: "#2196F3",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                marginRight: "10px"
+              }}
             >
-              Mentés
+              ⬍⬍ Nevek sorrendje
             </button>
+          </div>
+
+          <div>
+            <h4>Hét kezdő dátumának beállítása</h4>
+            <p><strong>Aktuális kezdő dátum:</strong> {kezdoDatum || "nincs beállítva"}</p>
+            <div style={{ marginTop: "10px" }}>
+              <input
+                type="date"
+                value={ujDatum}
+                onChange={(e) => setUjDatum(e.target.value)}
+                style={{ padding: "8px", marginRight: "10px", fontSize: "14px" }}
+              />
+              <button 
+                onClick={handleDatumMentes}
+                style={{ padding: "8px 16px", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
+              >
+                Mentés
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ✨ Sorrend Modal */}
+      {showSorrendModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '30px',
+            borderRadius: '8px',
+            maxWidth: '500px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto'
+          }}>
+            <h3>📋 Nevek sorrendjének beállítása</h3>
+            <p style={{ color: '#666', fontSize: '14px', marginBottom: '20px' }}>
+              Használd a ▲▼ gombokat a nevek átrendezéséhez a táblázatban.
+            </p>
+
+            <div style={{ marginBottom: '20px' }}>
+              {csoportok
+                .filter(c => c.nev.trim().toLowerCase() !== 'virág étterem')
+                .map((csoport, index) => (
+                  <div
+                    key={csoport.id}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: '10px',
+                      marginBottom: '8px',
+                      backgroundColor: '#f5f5f5',
+                      borderRadius: '4px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{
+                        backgroundColor: '#666',
+                        color: 'white',
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        minWidth: '30px',
+                        textAlign: 'center',
+                        fontSize: '14px'
+                      }}>
+                        {index + 1}.
+                      </span>
+                      <strong>{csoport.nev}</strong>
+                    </div>
+                    <div style={{ display: 'flex', gap: '5px' }}>
+                      <button
+                        onClick={() => moveCsoportUp(csoportok.findIndex(c => c.id === csoport.id))}
+                        disabled={index === 0}
+                        style={{
+                          padding: '5px 10px',
+                          border: '1px solid #ccc',
+                          backgroundColor: index === 0 ? '#e0e0e0' : 'white',
+                          cursor: index === 0 ? 'not-allowed' : 'pointer',
+                          borderRadius: '4px'
+                        }}
+                        title="Fel"
+                      >
+                        ▲
+                      </button>
+                      <button
+                        onClick={() => moveCsoportDown(csoportok.findIndex(c => c.id === csoport.id))}
+                        disabled={index === csoportok.filter(c => c.nev.trim().toLowerCase() !== 'virág étterem').length - 1}
+                        style={{
+                          padding: '5px 10px',
+                          border: '1px solid #ccc',
+                          backgroundColor: index === csoportok.filter(c => c.nev.trim().toLowerCase() !== 'virág étterem').length - 1 ? '#e0e0e0' : 'white',
+                          cursor: index === csoportok.filter(c => c.nev.trim().toLowerCase() !== 'virág étterem').length - 1 ? 'not-allowed' : 'pointer',
+                          borderRadius: '4px'
+                        }}
+                        title="Le"
+                      >
+                        ▼
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => {
+                  setShowSorrendModal(false);
+                  betoltCsoportok();
+                }}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#9e9e9e',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Mégse
+              </button>
+              <button
+                onClick={saveCsoportSorrend}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#4CAF50',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                💾 Mentés
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -213,7 +416,7 @@ const Etelek = () => {
         <tbody>
           {datumok.map((datum) => {
             const menu = menuk.find(m => m.datum === datum);
-            const napiEtelek = etelek.filter(e => e.datum === datum);
+            const napiEtelek = getRendezettEtelek(datum); // ✨ Használjuk a rendezett listát
             const activeItems = getActiveMenuItems(menu);
 
             return (
@@ -222,7 +425,6 @@ const Etelek = () => {
                   <tr style={{ backgroundColor: "#ebc182ff", fontWeight: "bold" }}>
                     <td>{datum}</td>
                     
-                    {/* Dinamikus menü oszlopok */}
                     {activeItems.length === 0 ? (
                       <td colSpan="3" style={{ textAlign: 'center' }}>Nincs menü</td>
                     ) : activeItems.length === 1 && editingMenuId !== menu.id ? (
@@ -367,7 +569,6 @@ const Etelek = () => {
                   </tr>
                 ))}
 
-                {/* Összesítő sor */}
                 <tr style={{ backgroundColor: "#76ff86ff", fontWeight: "bold" }}>
                   <td>{datum + " összesítés"}</td>
                   

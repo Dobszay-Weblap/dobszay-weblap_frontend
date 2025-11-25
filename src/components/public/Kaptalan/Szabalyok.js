@@ -48,7 +48,7 @@ export default function Szabalyok() {
       <h3 className='info' style={{ marginTop: '1.5rem' }}>Malacszolgálat</h3>
       <p className='cim' style={{ whiteSpace: 'pre-line' }}>{szabalyok.malacszolgalat}</p>
 
-      <div style={{ marginTop: "2rem" }}>
+      <div style={{ marginTop: "2rem", textAlign:"center"}}>
         <Button variant="warning" onClick={() => setShowModal(true)}>Szerkesztés</Button>
       </div>
 

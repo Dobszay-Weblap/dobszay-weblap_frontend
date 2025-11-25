@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./pages/Layout";
-import Hazak from "./components/public/Kaptalan/Hazak";
 import Adatok from "./components/public/Adatok";
 import Etelek from "./components/public/Kaptalan/Rendeles";
 import EtelekOsszesito from "./components/public/Kaptalan/EtelekOsszesito";
@@ -12,6 +11,8 @@ import ResetPassword from "./pages/ResetPassword";
 import KorabbiEv from "./components/public/Korabbiev";
 import Felhasznalok from "./components/admin/Felhasznalok";
 import Csolimpia from "./components/public/Kaptalan/Csolimpia";
+import KaptalanHazak from "./components/public/Kaptalan/KaptalanHazak";
+import MasikHazak from "./components/public/Kaptalan/MasikHazak";
 
 
 
@@ -19,7 +20,8 @@ function App() {
   return (
     <Routes>
       <Route path="/*" element={<Layout />}>
-        <Route path="hazak" element={<Hazak />} />
+        <Route path="kaptalanhazak" element={<KaptalanHazak />} />
+        <Route path="masikhazak" element={<MasikHazak />} />
         <Route path="adatok" element={<Adatok />} />
         <Route path="etelek" element={<Etelek />} />
         <Route path="etelosszesito" element={<EtelekOsszesito />} />

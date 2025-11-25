@@ -6,7 +6,7 @@ import "../App.css";
 import { useAuth } from "../contexts/AuthContext";
 import KorabbiEv from "../components/public/Korabbiev";
 import Adatok from "../components/public/Adatok";
-import Hazak from "../components/public/Kaptalan/Hazak";
+import Hazak from "../components/public/Kaptalan/KaptalanHazak";
 import Etelek from "../components/public/Kaptalan/Rendeles";
 import Ajanlatok from "../components/public/Ajanlatok";
 import ForgotPassword from "./ForgotPassword";
@@ -17,6 +17,8 @@ import Szabalyok from "../components/public/Kaptalan/Szabalyok";
 import EtelekOsszesito from "../components/public/Kaptalan/EtelekOsszesito";
 import Felhasznalok from "../components/admin/Felhasznalok";
 import Csolimpia from "../components/public/Kaptalan/Csolimpia";
+import MasikHazak from "../components/public/Kaptalan/MasikHazak";
+import KaptalanHazak from "../components/public/Kaptalan/KaptalanHazak";
 
 
 const Layout = () => {
@@ -132,13 +134,27 @@ const Layout = () => {
               <>
                 <NavDropdown title="Káptalan" id="kaptalan-dropdown">
                   <NavDropdown.Item as={Link} to="/etelek">Étel</NavDropdown.Item>
-                  <NavDropdown.Item as={Link} to="/hazak">Házak</NavDropdown.Item>
+                  <NavDropdown title="Házak" id="hazak-dropdown">
+                  <NavDropdown.Item as={Link} to="/kaptalanhazak">Káptalan házak</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/masikhazak">Táboron kívüli apartman ház</NavDropdown.Item>
+                </NavDropdown>
                   <NavDropdown.Item as={Link} to="/csolimpia">Csolimpia</NavDropdown.Item>
                   <NavDropdown.Item as={Link} to="/sortablazat">Sörtáblázat</NavDropdown.Item>
                   <NavDropdown.Item as={Link} to="/szabalyok">Szabályok</NavDropdown.Item>
                   <NavDropdown.Item as={Link} to="/eszkozok">Eszköz hozó</NavDropdown.Item>
                   <NavDropdown.Item as={Link} to="/kozkaja">Közkaja közpénz</NavDropdown.Item>
                   <NavDropdown.Item as={Link} to="/asztal">Terülj terülj asztalkám</NavDropdown.Item>
+                </NavDropdown>
+
+                <NavDropdown title="Sümeg" id="sumeg-dropdown">
+                  {/* <NavDropdown.Item as={Link} to="/etelek">Étel</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/hazak">Házak</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/csolimpia">Csolimpia</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/sortablazat">Sörtáblázat</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/szabalyok">Szabályok</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/eszkozok">Eszköz hozó</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/kozkaja">Közkaja közpénz</NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/asztal">Terülj terülj asztalkám</NavDropdown.Item> */}
                 </NavDropdown>
 
                 <Nav.Item>
@@ -235,6 +251,8 @@ const Layout = () => {
             <Route path="/password-reset" element={<ResetPassword />} />
             <Route path="/felhasznalok" element={<Felhasznalok />} />
             <Route path="/csolimpia" element={<Csolimpia />} />
+            <Route path="/kaptalanhazak" element={<KaptalanHazak />} />
+            <Route path="/masikhazak" element={<MasikHazak />} />
           </Routes>
         </div>
       </div>

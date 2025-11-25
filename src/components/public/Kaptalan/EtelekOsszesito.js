@@ -102,7 +102,7 @@ const isAdmin = () => {
   }
 
   return (
-    <div style={{ padding: '20px', margin: '0 auto', backgroundColor:'lightblue', borderBottomLeftRadius:'15px', borderBottomRightRadius:'15px'}}>
+    <div style={{ fontSize:'11px', padding: '20px', margin: '0 auto', backgroundColor:'lightblue', borderBottomLeftRadius:'15px', borderBottomRightRadius:'15px'}}>
       <h2 style={{ marginBottom: '30px', fontSize:'30px', fontWeight:'bolder' }}>Ételek Összesítő</h2>
 
       {/* Napi összesítés */}
@@ -126,7 +126,7 @@ const isAdmin = () => {
           <tbody>
             {napiOsszesites.map((nap, index) => (
               <tr key={nap.datum} style={{ 
-                backgroundColor: index % 2 === 0 ? 'white' : '#fafafa',
+                backgroundColor: index % 2 === 0 ? 'white' : '#fafafa', fontSize:'11px',
                 borderBottom: '1px solid #eee'
               }}>
                 <td style={{ padding: '12px' }}>{nap.datum}</td>
@@ -144,8 +144,9 @@ const isAdmin = () => {
 
       {isAdmin() && (      
       <>
-        <h3>Összesítés Név szerint</h3>
-        <table style={{ 
+        <h3 className="nev">Összesítés Név szerint</h3>
+        <table style={{
+          fontSize:'11px', 
           width: '100%', 
           borderCollapse: 'collapse', 
           backgroundColor: 'white',

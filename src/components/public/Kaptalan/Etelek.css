@@ -12,8 +12,6 @@
   overflow-x: auto;
   text-align: center;
   background-color: #884d4d;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
   -webkit-overflow-scrolling: touch;
   position: relative;
 }
@@ -25,6 +23,7 @@
   z-index: 3;
   padding: 10px;
   margin: 0;
+  font-size: 11px;
 }
 
 .etel-table {
@@ -32,7 +31,7 @@
   min-width: 1000px; 
   min-width: unset;
   font-family: Arial, sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   background-color: aqua;
   border-collapse: collapse;
   table-layout: auto; 
@@ -45,6 +44,7 @@
   text-align: center;
   white-space: nowrap; 
   min-width: 80px; 
+  font-size: 11px;
 }
 
 .etel-table th {
@@ -53,6 +53,7 @@
   position: sticky;
   top: 0;
   z-index: 2;
+  font-size: 11px;
 }
 
 .etel-table tr:nth-child(even) {
@@ -75,6 +76,7 @@
   padding: 5px;
   text-align: center;
   box-sizing: border-box;
+  font-size: 11px;
 }
 
 .etel-table .button {
@@ -91,8 +93,6 @@
   margin: 0;
 }
 
-
-
 .etel-table button {
   padding: 8px 12px;
   margin: 5px;
@@ -103,6 +103,11 @@
   border-radius: 4px;
   white-space: nowrap;
   min-width: 90px;
+  font-size: 11px;
+}
+
+.nev{
+  text-align: center;
 }
 
 .etel-table button:hover {

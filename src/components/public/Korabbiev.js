@@ -18,25 +18,17 @@ const KorabbiEv = () => {
 
         try {
             const parsedYear = parseInt(year, 10);
-            //console.log("Lekért év:", parsedYear);
-            //console.log("Teljes URL:", `http://localhost:8000/api/korabbiev/${parsedYear}`);
             
-            const response = await myAxios.get(`http://localhost:8000/api/korabbiev/${parsedYear}`);
-            
-            //console.log("Válasz adatok:", response.data);
+            const response = await myAxios.get(`/api/korabbiev/${parsedYear}`);
             
             if (response.data.error) {
                 setError(response.data.error);
             } else {
                 setVideos(response.data.videos ?? []);
                 setKepek(response.data.images ?? []);
-                //console.log("Betöltött képek:", response.data.images);
-                //console.log("Betöltött videók:", response.data.videos);
             }
         } catch (err) {
             console.error('Hiba részletei:', err);
-            console.error('Hiba válasz:', err.response);
-            console.error('Hiba üzenet:', err.message);
             setError('Hiba történt az adatok lekérésekor: ' + (err.response?.data?.message || err.message));
         }
     }, [year]);
@@ -62,8 +54,9 @@ const KorabbiEv = () => {
         setUploadMessage('');
 
         try {
+            // ✅ Relatív URL
             await myAxios.post(
-                `http://localhost:8000/api/korabbiev/${year}/upload-image`,
+                `/api/korabbiev/${year}/upload-image`,
                 formData,
                 {
                     headers: {
@@ -71,14 +64,13 @@ const KorabbiEv = () => {
                     },
                 }
             );
-            //setUploadMessage(response.data.message || 'Kép sikeresen feltöltve!');
-            fetchData(); // Frissítjük a listát
+            fetchData();
         } catch (err) {
             setUploadMessage('Hiba a kép feltöltése során');
             console.error(err);
         } finally {
             setUploading(false);
-            e.target.value = ''; // Input reset
+            e.target.value = '';
         }
     };
 
@@ -93,8 +85,9 @@ const KorabbiEv = () => {
         setUploadMessage('');
 
         try {
+            // ✅ Relatív URL
             await myAxios.post(
-                `http://localhost:8000/api/korabbiev/${year}/upload-video`,
+                `/api/korabbiev/${year}/upload-video`,
                 formData,
                 {
                     headers: {
@@ -102,14 +95,13 @@ const KorabbiEv = () => {
                     },
                 }
             );
-            //setUploadMessage(response.data.message || 'Videó sikeresen feltöltve!');
-            fetchData(); // Frissítjük a listát
+            fetchData();
         } catch (err) {
             setUploadMessage('Hiba a videó feltöltése során');
             console.error(err);
         } finally {
             setUploading(false);
-            e.target.value = ''; // Input reset
+            e.target.value = '';
         }
     };
 
@@ -118,10 +110,10 @@ const KorabbiEv = () => {
 
         try {
             const filepath = imageUrl.split('/').slice(-2).join('/');
-            await myAxios.delete(`http://localhost:8000/api/korabbiev/${year}/delete-image`, {
+            // ✅ Relatív URL
+            await myAxios.delete(`/api/korabbiev/${year}/delete-image`, {
                 data: { filepath }
             });
-            //setUploadMessage('Kép törölve');
             fetchData();
         } catch (err) {
             setUploadMessage('Hiba a törlés során');
@@ -134,10 +126,10 @@ const KorabbiEv = () => {
 
         try {
             const filepath = videoUrl.split('/').slice(-2).join('/');
-            await myAxios.delete(`http://localhost:8000/api/korabbiev/${year}/delete-video`, {
+            // ✅ Relatív URL
+            await myAxios.delete(`/api/korabbiev/${year}/delete-video`, {
                 data: { filepath }
             });
-            //setUploadMessage('Videó törölve');
             fetchData();
         } catch (err) {
             setUploadMessage('Hiba a törlés során');
